@@ -12,12 +12,11 @@ import {
 
 type Props = {
   title: string
-  description?: string
   trigger: JSX.Element
   actionBtn: JSX.Element
 }
 
-const AlertModal = ({ title, description, actionBtn, trigger }: Props) => {
+const AlertModal = ({ title, actionBtn, trigger }: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
@@ -25,7 +24,8 @@ const AlertModal = ({ title, description, actionBtn, trigger }: Props) => {
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>
-            {description && description}
+            Esta operação não pode ser desfeita. Tem a certeza que pretende
+            continuar?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
