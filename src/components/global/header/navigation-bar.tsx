@@ -3,7 +3,7 @@ import { HEADER_LINKS } from "../../../constants/header-content"
 
 const NavigationBar = () => {
   return (
-    <nav className="hidden lg:inline-block">
+    <nav className="hidden flex-1 items-center justify-center lg:flex">
       <ul className="flex items-center gap-5">
         {HEADER_LINKS.map((link, index) => (
           <li key={index}>

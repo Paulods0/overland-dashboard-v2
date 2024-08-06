@@ -31,7 +31,7 @@ const Header = () => {
       <Container className="flex items-center justify-between">
         <Link
           to="/"
-          className="text-2xl md:text-4xl font-bold text-baseColor capitalize"
+          className="text-2xl md:text-4xl font-bold text-baseColor capitalize w-[15vw]"
         >
           {headTitle}
         </Link>
