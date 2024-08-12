@@ -1,22 +1,23 @@
-import Button from "@/components/ui/button/button"
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react"
-import { useState } from "react"
+import Button from "@/components/ui/button/button"
+import { SetURLSearchParams } from "react-router-dom"
 
-type Props = {}
+type Props = {
+  currentPage: number
+  setSearch: SetURLSearchParams
+}
 
+const MAX_VIEW_BUTTONS = 5
 const totalPages = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ]
-const MAX_VIEW_BUTTONS = 5
 
-const Pagination = ({}: Props) => {
-  const [currentPage, setCurrentPage] = useState(1)
-
+const Pagination = ({ currentPage, setSearch }: Props) => {
   const controls = {
     calculateMaxViewButtons: () => {
       let maxLeft = currentPage - Math.floor(MAX_VIEW_BUTTONS / 2)
@@ -33,35 +34,45 @@ const Pagination = ({}: Props) => {
       return { maxLeft, maxRight }
     },
     nextPage: () => {
-      setCurrentPage((prev) => {
-        if (prev >= totalPages.length) {
-          return totalPages.length
+      setSearch((state) => {
+        let page = Number(state.get("page"))
+
+        if (page > totalPages.length) {
+          state.set("page", String(totalPages.length))
+          return state
         } else {
-          return prev + 1
+          const nextPage = page + 1
+          state.set("page", String(nextPage))
+          return state
         }
       })
     },
     prevPage: () => {
-      setCurrentPage((prev) => {
-        if (prev === 1) {
-          return 1
+      setSearch((state) => {
+        let page = Number(state.get("page"))
+        if (page < 1) {
+          state.set("page", "1")
+          return state
         } else {
-          return prev - 1
+          const prevPage = page - 1
+          state.set("page", String(prevPage))
+          return state
         }
       })
     },
     goTo: (page: number) => {
-      setCurrentPage(page)
+      setSearch()
     },
     goToStart: () => {
-      setCurrentPage(1)
+      setSearch()
     },
     goToEnd: () => {
-      setCurrentPage(totalPages.length)
+      setSearch()
     },
   }
 
   const { maxLeft, maxRight } = controls.calculateMaxViewButtons()
+
   const slicedPages = totalPages.slice(maxLeft - 1, maxRight)
 
   return (

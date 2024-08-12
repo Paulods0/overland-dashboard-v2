@@ -9,8 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Edit, Trash } from "lucide-react"
 import Button from "../ui/button/button"
+import { Edit, Trash } from "lucide-react"
+import EditUserForm from "./edit-user-form"
 
 const UsersTable = () => {
   return (
@@ -37,15 +38,15 @@ const UsersTable = () => {
                 <div className="flex items-center gap-2 ">
                   {
                     <Modal
+                      title="Atualizar os Dados"
+                      description="Atualize os dados do usuário, como o nome, sobreome, role, email e a imagem"
                       trigger={<Button icon={Edit} />}
-                      actionBtn={<Button label="Salvar" />}
                     >
-                      Adicionar algum formulário aqui.
+                      <EditUserForm />
                     </Modal>
                   }
                   <AlertModal
                     title="Tens a certeza que pretendes remover este usuário?"
-                    description="Esta acção não poderá ser desfeita."
                     trigger={<Button icon={Trash} buttonType="danger" />}
                     actionBtn={<Button label="Remover" buttonType="danger" />}
                   />

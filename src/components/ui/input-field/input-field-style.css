@@ -1,4 +1,4 @@
-.date-icon::-webkit-inner-spin-button {
-  color: blue;
-  background-color: blue;
+.date-icon::-webkit-calendar-picker-indicator {
+  border-radius: 4px;
+  background-color: white;
 }

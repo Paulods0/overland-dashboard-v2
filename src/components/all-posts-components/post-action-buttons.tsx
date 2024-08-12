@@ -12,14 +12,18 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog"
 
-const PostActionButtons = () => {
+type PostActionButtonsProps = {
+  postId: string
+}
+
+const PostActionButtons = ({ postId }: PostActionButtonsProps) => {
   return (
     <>
       <div className="flex items-center justify-between gap-2 w-full">
         <p className="text-sm">Tiago Baptista</p>
         <div className="flex gap-2">
           <LinkButton
-            href="/post/1"
+            href={`/post/${postId}`}
             icon={Edit3}
             className="w-fit bg-white h-8 text-black"
           />

@@ -1,6 +1,6 @@
 import Modal from "../global/modal"
 import Box from "@/components/global/box"
-import { Edit3, Save, Trash } from "lucide-react"
+import { Edit, Trash } from "lucide-react"
 import AlertModal from "@/components/global/alert-modal"
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   TableHead,
 } from "@/components/ui/table"
 import Button from "../ui/button/button"
+import EditSubForm from "./edit-sub-form"
 
 const SubsTable = () => {
   return (
@@ -36,16 +37,11 @@ const SubsTable = () => {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Modal
-                    trigger={<Button icon={Edit3} buttonType="base" />}
-                    actionBtn={
-                      <Button
-                        icon={Save}
-                        label="Salvar alterações"
-                        className="border-none bg-indigo-700 text-white"
-                      />
-                    }
+                    title="Atualizar os Dados"
+                    description="Atualize os dados de um inscrito para que ele possa receber corretamente as notícias sobre o nosso site regularmente"
+                    trigger={<Button icon={Edit} />}
                   >
-                    Algum formulário aqui
+                    <EditSubForm />
                   </Modal>
 
                   <AlertModal

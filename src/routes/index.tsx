@@ -72,6 +72,10 @@ export const router = createBrowserRouter([
         path: "classificados",
         element: <Page.ClassifiedPostsPage />,
       },
+      {
+        path: "post/:id",
+        element: <Page.EditPostPage />,
+      },
     ],
   },
 ])

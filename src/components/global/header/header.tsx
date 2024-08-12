@@ -1,9 +1,9 @@
 import Container from "../container"
-import { Link, useLocation } from "react-router-dom"
 import ThemeButton from "../theme-button"
-import NavigationBar from "./navigation-bar"
-import MobileMenuButton from "./mobile-menu/mobile-menu-button"
 import { useEffect, useState } from "react"
+import NavigationBar from "./navigation-bar"
+import { Link, useLocation } from "react-router-dom"
+import MobileMenuButton from "./mobile-menu/mobile-menu-button"
 
 const Header = () => {
   const { pathname } = useLocation()
@@ -15,8 +15,12 @@ const Header = () => {
       pathArr.length > 0 ? decodeURIComponent(pathArr[pathArr.length - 1]) : ""
     const decodedPath = decodeURIComponent(path)
 
+    const decodeURLTitle = decodedPath.includes("-")
+      ? decodedPath.replace("-", " ")
+      : decodedPath
+
     if (pathArr.length > 0) {
-      setHeadTitle(decodedPath)
+      setHeadTitle(decodeURLTitle)
     } else {
       setHeadTitle("Dashboard")
     }
@@ -31,7 +35,7 @@ const Header = () => {
       <Container className="flex items-center justify-between">
         <Link
           to="/"
-          className="text-2xl md:text-4xl font-bold text-baseColor capitalize w-[15vw]"
+          className="text-2xl md:text-4xl font-bold text-baseColor capitalize"
         >
           {headTitle}
         </Link>

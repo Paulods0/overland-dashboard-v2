@@ -1,9 +1,11 @@
-import { Plus, Save } from "lucide-react"
+import { Plus } from "lucide-react"
 import Modal from "@/components/global/modal"
 import Button from "@/components/ui/button/button"
 import Container from "@/components/global/container"
 import Pagination from "@/components/global/pagination"
 import SubsTable from "@/components/subs-components/subs-table"
+
+import { SubsForm } from "@/components/subs-components/subs-form"
 
 const SubsPage = () => {
   return (
@@ -16,18 +18,19 @@ const SubsPage = () => {
               <span className="text-lg font-extralight"> 8</span>
             </h4>
             <Modal
+              title="Adiconar um inscrito"
+              description="Adicione um novo inscrito para que ele possa receber notícias sobre o nosso site regularmente"
               trigger={
-                <Button icon={Plus} label="Adicionar" buttonType="base" className="" />
-              }
-              actionBtn={
                 <Button
-                  icon={Save}
-                  label="Salvar"
-                  className="border-none bg-indigo-700 text-white"
+                  icon={Plus}
+                  label="Adicionar"
+                  buttonType="base"
+                  className="w-fit"
                 />
               }
+              cancelBtn={false}
             >
-              Algum formulário aqui
+              <SubsForm />
             </Modal>
           </div>
 

@@ -3,7 +3,7 @@ type Props = {
 }
 
 const Label = ({ label }: Props) => {
-  return <label>{label}</label>
+  return <label className="font-semibold">{label}</label>
 }
 
 export default Label

@@ -1,0 +1,17 @@
+.is-active {
+  color: black;
+  padding: 4px 8px;
+  line-height: 16px;
+  font-size: 0.75rem;
+  border-radius: 10px;
+  background-color: rgba(82 82 82 / 0.6);
+  border: 1px solid rgba(82 82 82 / 0.6);
+}
+
+.toolbar-btn {
+  padding: 4px 8px;
+  line-height: 16px;
+  font-size: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(82 82 82 / 0.6);
+}
