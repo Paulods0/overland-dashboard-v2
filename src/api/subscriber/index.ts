@@ -1,4 +1,3 @@
-import axios from "@/config/axios.config"
 import {
   CreateSubscriberDTO,
   Subscriber,
@@ -6,10 +5,12 @@ import {
   UpdateSubscriberDTO,
 } from "./subscriber.types"
 
+import axios from "@/config/axios.config"
+
 export class SubscriberAPI {
   static async createSubscriber(data: CreateSubscriberDTO): Promise<void> {
     try {
-      await axios.post("/newsletter", data)
+      await axios.post("/newsletter/register", data)
     } catch (error) {
       console.log(error)
     }
@@ -30,6 +31,10 @@ export class SubscriberAPI {
   }
 
   static async deleteSubscriber(id: string): Promise<void> {
-    await axios.delete(`/newsletter/${id}`)
+    try {
+      await axios.delete(`/newsletter/${id}`)
+    } catch (error) {
+      console.error(error)
+    }
   }
 }

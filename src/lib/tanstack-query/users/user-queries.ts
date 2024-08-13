@@ -1,8 +1,18 @@
-// import { useQuery } from "@tanstack/react-query"
+import { UserAPI } from "@/api/users"
+import { useQuery } from "@tanstack/react-query"
+import { KEYS } from "@/utils/tanstack-query.enuns"
+import { User, UserResponseDTO } from "@/api/users/user.type"
 
-// export const useGetUsers = ()=>{
-//   return useQuery({
-//     queryKey:[],
-//     queryFn: 
-//   })
-// }
+export const useGetUsers = (page: string) => {
+  return useQuery<UserResponseDTO>({
+    queryKey: [KEYS.GET_USERS, page],
+    queryFn: () => UserAPI.getUsers(page),
+  })
+}
+
+export const useGetSingleUser = (id: string) => {
+  return useQuery<User>({
+    queryKey: [KEYS.GET_SINGLE_USER],
+    queryFn: () => UserAPI.getSingleUser(id),
+  })
+}

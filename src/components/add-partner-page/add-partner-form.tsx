@@ -1,72 +1,111 @@
 import Box from "../global/box"
 import { Save } from "lucide-react"
+import { toast } from "react-toastify"
 import { Input } from "../ui/input-field"
 import { Select } from "../ui/select-field"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
+import { CreatePartnerDTO } from "@/api/partner/partner.type"
+import { AUTHOR_ID } from "../add-post-components/add-post-form"
+import { useCreatePartner } from "@/lib/tanstack-query/partner/partner-mutations"
+import { uploadToFirebase } from "@/lib/firebase"
+import Loading from "../global/loading"
 
 type PartnerProps = {
   content: string
 }
 
 const AddPartnerForm = ({ content }: PartnerProps) => {
-  const [tags, setTags] = useState("")
-  const [date, setDate] = useState("")
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [authorNotes, setAuthorNotes] = useState("")
-  const [image, setImage] = useState<string | null>(null)
+  const { mutate, isPending } = useCreatePartner()
+
+  const [partner, setPartner] = useState<CreatePartnerDTO>({
+    date: "",
+    tags: "",
+    title: "",
+    image: "",
+    content: "",
+    category: "",
+    author_notes: "",
+    author: AUTHOR_ID,
+  })
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
 
   function handleImage(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
-      setImage(urlImage)
+      setPreviewImage(urlImage)
+      setPartner({ ...partner, image: image })
     }
   }
 
-  function handleSubmitForm(e: FormEvent) {
+  async function handleSubmitForm(e: FormEvent) {
     e.preventDefault()
+    try {
+      if (
+        !partner.title ||
+        !partner.author ||
+        !partner.image ||
+        !partner.date
+      ) {
+        toast.error("Preencha todos os dados")
+        return
+      }
 
-    if (!title || !author || !image || !date) {
-      alert("Preencha todos os dados")
-      return
+      const downloadURL = await uploadToFirebase(
+        partner.image as File,
+        "partners"
+      )
+      const tagArr =
+        typeof partner.tags === "string" ? partner.tags.split(",") : ""
+
+      const data: CreatePartnerDTO = {
+        content,
+        tags: tagArr,
+        image: downloadURL,
+        date: partner.date,
+        category: "partner",
+        title: partner.title,
+        author: partner.author,
+        author_notes: partner.author_notes,
+      }
+
+      mutate(data)
+      console.log(data)
+      toast.success("Publicado com sucesso")
+    } catch (error) {
+      console.log(error)
     }
-
-    const data = {
-      image,
-      tags,
-      date,
-      author,
-      content,
-      authorNotes,
-      category: "partner",
-    }
-
-    console.log(data)
   }
 
   return (
     <Box className="flex flex-col">
       <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col">
         <FormButton
-          icon={Save}
           type="submit"
           label="Publicar"
+          disabled={isPending}
+          icon={isPending ? Loading : Save}
           className="w-full bg-indigo-700 text-white border-none self-end"
         />
+        
         <Input.Root>
           <Input.Label title="Título*" />
           <Input.Field
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={partner.title}
+            onChange={(e) => setPartner({ ...partner, title: e.target.value })}
           />
         </Input.Root>
 
-        {image && (
-          <img src={image} alt={title} className="size-14 object-contain" />
+        {previewImage && (
+          <img
+            src={previewImage}
+            alt={partner.title}
+            className="size-14 object-contain"
+          />
         )}
 
         <Input.Root>
@@ -78,8 +117,8 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
           <Input.Label title="Data de criação" />
           <Input.Field
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={partner.date}
+            onChange={(e) => setPartner({ ...partner, date: e.target.value })}
           />
         </Input.Root>
 
@@ -87,8 +126,8 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
           <Input.Label title="Tags (opcional e separar por vírgula)" />
           <Input.Field
             type="text"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
+            value={partner.tags}
+            onChange={(e) => setPartner({ ...partner, tags: e.target.value })}
           />
         </Input.Root>
 
@@ -96,16 +135,18 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
           <Input.Label title="Notas do autor (opcional)" />
           <Input.TextArea
             className="h-20"
-            value={authorNotes}
-            onChange={(e) => setAuthorNotes(e.target.value)}
+            value={partner.author_notes}
+            onChange={(e) =>
+              setPartner({ ...partner, author_notes: e.target.value })
+            }
           />
         </Input.Root>
 
         <Select.Root>
           <Select.Label label="Autor" />
           <Select.Container
-            defaultValue={authorNotes}
-            onChange={(e) => setAuthor(e.target.value)}
+            defaultValue={partner.author}
+            onChange={(e) => setPartner({ ...partner, author: e.target.value })}
           >
             <Select.Option value="user-1" label="User 1" />
             <Select.Option value="user-2" label="User 2" />

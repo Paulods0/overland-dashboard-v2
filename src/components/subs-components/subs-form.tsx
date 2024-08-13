@@ -1,34 +1,46 @@
-import { UserPlus } from "lucide-react"
-import { FormEvent, useState } from "react"
-import { Input } from "@/components/ui/input-field"
-import FormButton from "@/components/ui/input-field/form-button"
 import { toast } from "react-toastify"
+import { UserPlus } from "lucide-react"
+import Loading from "../global/loading"
 import Button from "../ui/button/button"
 import { DialogClose } from "../ui/dialog"
-
-type SubscriberProps = {
-  name: string
-  surname: string
-  email: string
-}
+import { FormEvent, useState } from "react"
+import useIsLoading from "@/hooks/useIsLoading"
+import { Input } from "@/components/ui/input-field"
+import FormButton from "@/components/ui/input-field/form-button"
+import { useCreateSub } from "@/lib/tanstack-query/subs/subs-mutation"
+import { CreateSubscriberDTO } from "@/api/subscriber/subscriber.types"
 
 export const SubsForm = () => {
-  const [subscriber, setSubscriber] = useState<SubscriberProps>({
-    email: "",
+  const { isLoading, toggleLoading } = useIsLoading()
+  const { mutate } = useCreateSub()
+
+  const [subscriber, setSubscriber] = useState<CreateSubscriberDTO>({
     name: "",
-    surname: "",
+    email: "",
+    phone: "",
+    country: "",
+    countryCode: "",
   })
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!subscriber.name || !subscriber.surname || !subscriber.email) {
-      toast.error("Preecnha todos os campos obrigatórios")
-      return
-    }
+    toggleLoading(true)
+    try {
+      if (!subscriber.name || !subscriber.email || !subscriber.country) {
+        toast.error("Preecnha todos os campos obrigatórios")
+        toggleLoading(false)
+        return
+      }
 
-    const data: SubscriberProps = { ...subscriber }
-    console.log(data)
-    toast.success("Subscrição feita com sucesso.")
+      const data: CreateSubscriberDTO = { ...subscriber }
+      console.log(data)
+      mutate(data)
+      toast.success("Subscrição feita com sucesso.")
+      toggleLoading(false)
+    } catch (error) {
+      toggleLoading(false)
+      console.error(error)
+    }
   }
 
   return (
@@ -45,12 +57,12 @@ export const SubsForm = () => {
       </Input.Root>
 
       <Input.Root>
-        <Input.Label title="Sobrenome*" />
+        <Input.Label title="País*" />
         <Input.Field
           type="text"
-          value={subscriber.surname}
+          value={subscriber.country}
           onChange={(e) =>
-            setSubscriber({ ...subscriber, surname: e.target.value })
+            setSubscriber({ ...subscriber, country: e.target.value })
           }
         />
       </Input.Root>
@@ -65,11 +77,17 @@ export const SubsForm = () => {
           }
         />
       </Input.Root>
+
       <div className="flex items-center gap-2 justify-end">
         <DialogClose asChild>
           <Button label="Cancelar" buttonType="cancel" />
         </DialogClose>
-        <FormButton label="Subscrever" icon={UserPlus} />
+
+        <FormButton
+          label="Subscrever"
+          disabled={isLoading}
+          icon={isLoading ? Loading : UserPlus}
+        />
       </div>
     </form>
   )

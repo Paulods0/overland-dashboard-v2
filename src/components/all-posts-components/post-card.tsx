@@ -1,9 +1,9 @@
 import Box from "../global/box"
 import PostActionButtons from "./post-action-buttons"
-import { PostResponseDTO } from "@/api/post/post.types"
+import { Post } from "@/api/post/post.types"
 
 type Props = {
-  post: PostResponseDTO
+  post: Post
 }
 
 const PostCard = ({ post }: Props) => {

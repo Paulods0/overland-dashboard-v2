@@ -1,11 +1,20 @@
-export type Partner = {}
-
-export interface CreatePartnerDTO {
+export type Partner = {
+  date: string
   image: string
   title: string
   author: string
   content: string
-  date?: string
+}
+
+export interface CreatePartnerDTO {
+  date: string
+  title: string
+  author: string
+  content: string
+  category: string
+  image: string | File
+  author_notes?: string
+  tags: string | string[]
 }
 
 export interface UpdatePartnerDTO {
@@ -19,5 +28,5 @@ export interface UpdatePartnerDTO {
 
 export interface PartnerResponseDTO {
   pages: number
-  posts: Partner[]
+  partners: Partner[]
 }

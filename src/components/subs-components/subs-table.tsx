@@ -12,28 +12,52 @@ import {
 } from "@/components/ui/table"
 import Button from "../ui/button/button"
 import EditSubForm from "./edit-sub-form"
+import { Subscriber } from "@/api/subscriber/subscriber.types"
+import { useDeleteSub } from "@/lib/tanstack-query/subs/subs-mutation"
+import useIsLoading from "@/hooks/useIsLoading"
+import { toast } from "react-toastify"
 
-const SubsTable = () => {
+type Props = {
+  subs: Subscriber[]
+}
+
+const SubsTable = ({ subs }: Props) => {
+  console.log(subs)
+
+  const { isLoading, toggleLoading } = useIsLoading()
+  const { mutate } = useDeleteSub()
+
+  async function handleDeleteSub(id: string) {
+    toggleLoading(true)
+    try {
+      mutate(id)
+      toggleLoading(false)
+      toast.success("Removido com sucesso")
+    } catch (error) {
+      toggleLoading(false)
+      toast.error("Erro ao remover, tente novamente")
+      console.error(error)
+    }
+  }
+
   return (
     <Box className="h-[60vh] overflow-y-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
             <TableHead>Nome</TableHead>
-            <TableHead>Sobrenome</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Nº telefone</TableHead>
+            <TableHead>País</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 8 }).map((_, index) => (
+          {subs.map((sub, index) => (
             <TableRow key={index}>
-              <TableCell>90kd20jf20fjc</TableCell>
-              <TableCell>Paulo</TableCell>
-              <TableCell>Luguenda</TableCell>
-              <TableCell>pauloluguenda@gmail.com</TableCell>
-              <TableCell>941685402</TableCell>
+              <TableCell>{sub.name}</TableCell>
+              <TableCell>{sub.email}</TableCell>
+              <TableCell>{sub.phone ? sub.phone : "Nenhum"}</TableCell>
+              <TableCell>{sub.country}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Modal
@@ -41,12 +65,19 @@ const SubsTable = () => {
                     description="Atualize os dados de um inscrito para que ele possa receber corretamente as notícias sobre o nosso site regularmente"
                     trigger={<Button icon={Edit} />}
                   >
-                    <EditSubForm />
+                    <EditSubForm subscriber={sub} />
                   </Modal>
 
                   <AlertModal
                     trigger={<Button icon={Trash} buttonType="danger" />}
-                    actionBtn={<Button label="Remover" buttonType="base" />}
+                    actionBtn={
+                      <Button
+                        buttonType="base"
+                        disabled={isLoading}
+                        label={isLoading ? "Removendo..." : "Remover"}
+                        onClick={() => handleDeleteSub(sub._id)}
+                      />
+                    }
                     title="Tens a certeza que pretendes remover este inscrito?"
                   />
                 </div>

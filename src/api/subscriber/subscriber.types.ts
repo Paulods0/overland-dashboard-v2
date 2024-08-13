@@ -1,4 +1,5 @@
 export type Subscriber = {
+  _id: string
   email: string
   name: string
   phone?: string
@@ -16,8 +17,8 @@ export interface CreateSubscriberDTO {
 
 export interface UpdateSubscriberDTO {
   id: string
-  email?: string
   name?: string
+  email?: string
   phone?: string
   country?: string
   countryCode?: string
@@ -25,5 +26,5 @@ export interface UpdateSubscriberDTO {
 
 export interface SubscriberResponseDTO {
   pages: number
-  subscribers: Subscriber[]
+  subs: Subscriber[]
 }

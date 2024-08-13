@@ -1,14 +1,22 @@
-import Box from "@/components/global/box"
-import Modal from "@/components/global/modal"
-import Button from "@/components/ui/button/button"
+import { Plus } from "lucide-react"
+import { useSearchParams } from "react-router-dom"
 import Container from "@/components/global/container"
 import Pagination from "@/components/global/pagination"
-import AlertModal from "@/components/global/alert-modal"
+import LoadingData from "@/components/global/loading-data"
 import LinkButton from "@/components/ui/button/link-button"
-
-import { Edit3, Plus, Save, Trash } from "lucide-react"
+import TipCard from "@/components/add-tips-components/tip-card"
+import NothingToShow from "@/components/global/nothing-to-show"
+import { useGetTips } from "@/lib/tanstack-query/tip/tip-queries"
 
 const TipsPage = () => {
+  const [search, setSearch] = useSearchParams({ page: "1" })
+  const currentPage = search.get("page") || "1"
+
+  const { data, isLoading } = useGetTips(currentPage)
+
+  if (isLoading) return <LoadingData />
+  if (!data?.posts) return <NothingToShow name="dica" />
+
   return (
     <main>
       <Container>
@@ -17,49 +25,16 @@ const TipsPage = () => {
             <LinkButton href="/novo/dica" label="Adicionar" icon={Plus} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4 h-[60vh] overflow-y-auto">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <Box key={index} className="flex flex-col gap-4">
-                <img
-                  src="/bg.jpg"
-                  className="object-cover w-full h-[25vh]"
-                  alt=""
-                />
-                <div className="flex items-end justify-between">
-                  <div className="flex flex-col w-full">
-                    <h1>Título</h1>
-                    <h4>Dicas</h4>
-                  </div>
-
-                  <div className="flex flex-col w-full">
-                    <h4 className="italic text-xs">19 de Junho de 2024</h4>
-                    <div className="flex items-center gap-2">
-                      <Modal
-                        trigger={<Button icon={Edit3} buttonType="base" />}
-                        actionBtn={
-                          <Button
-                            icon={Save}
-                            label="Salvar as alterações"
-                            buttonType="base"
-                          />
-                        }
-                      >
-                        Algum formulário aqui.
-                      </Modal>
-                      <AlertModal
-                        trigger={<Button icon={Trash} buttonType="danger" />}
-                        actionBtn={
-                          <Button buttonType="danger" label="Remover" />
-                        }
-                        title="Tem a certeza que pretendes remover esta dica?"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Box>
+            {data?.posts.map((tip, index) => (
+              <TipCard key={index} tip={tip} />
             ))}
           </div>
 
-          <Pagination />
+          <Pagination
+            currentPage={1}
+            pages={data!.pages}
+            setSearch={setSearch}
+          />
         </section>
       </Container>
     </main>

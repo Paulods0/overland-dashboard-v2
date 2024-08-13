@@ -1,29 +1,25 @@
 import { Plus } from "lucide-react"
-import Loading from "@/components/global/loading"
+import { useSearchParams } from "react-router-dom"
 import Container from "@/components/global/container"
 import Pagination from "@/components/global/pagination"
+import LoadingData from "@/components/global/loading-data"
 import LinkButton from "@/components/ui/button/link-button"
+import NothingToShow from "@/components/global/nothing-to-show"
 import PostCard from "@/components/all-posts-components/post-card"
 import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import FilterContainer from "@/components/all-posts-components/filter-container"
-import { useSearchParams } from "react-router-dom"
 
 const AllPosts = () => {
-  const [search, setSearch] = useSearchParams({ page: "1", category: "" })
+  const [search, setSearch] = useSearchParams({page: "1",category: "",limit: "20"})
 
-  const currentPage = Number(search.get("page") || 1)
-  console.log(currentPage)
+  const currentPage = search.get("page") || "1"
+  const category = search.get("category") || ""
+  const limit = search.get("limit") || "20"
 
-  const { data, isLoading } = useGetAllPosts(currentPage)
-  // console.log(data?.posts)
+  const { data, isLoading } = useGetAllPosts(currentPage, category, limit)
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[calc(100vh-120px)] flex items-center justify-center">
-        <Loading size={32} />
-      </div>
-    )
-  }
+  if (isLoading) return <LoadingData />
+  if (!data?.posts) return <NothingToShow name="post" />
 
   return (
     <main>
@@ -44,7 +40,11 @@ const AllPosts = () => {
               <PostCard key={post._id} post={post} />
             ))}
           </div>
-          <Pagination currentPage={1} setSearch={setSearch} />
+          <Pagination
+            pages={data!.pages}
+            currentPage={1}
+            setSearch={setSearch}
+          />
         </section>
       </Container>
     </main>

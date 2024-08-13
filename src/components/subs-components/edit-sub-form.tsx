@@ -1,29 +1,43 @@
+import {
+  Subscriber,
+  UpdateSubscriberDTO,
+} from "@/api/subscriber/subscriber.types"
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
+import Loading from "../global/loading"
+import Button from "../ui/button/button"
 import { Input } from "../ui/input-field"
+import { DialogClose } from "../ui/dialog"
 import { FormEvent, useState } from "react"
 import FormButton from "../ui/input-field/form-button"
-import { DialogClose } from "../ui/dialog"
-import Button from "../ui/button/button"
+import { useUpdateSub } from "@/lib/tanstack-query/subs/subs-mutation"
 
-type SubProps = {
-  name: string
-  lastname: string
-  email: string
+type Props = {
+  subscriber: Subscriber
 }
 
-const EditSubForm = () => {
-  const [sub, setSub] = useState<SubProps>({
-    name: "",
-    email: "",
-    lastname: "",
+const EditSubForm = ({ subscriber }: Props) => {
+  const { mutate, isPending } = useUpdateSub()
+
+  const [sub, setSub] = useState<UpdateSubscriberDTO>({
+    id: subscriber._id,
+    name: subscriber.name,
+    email: subscriber.email,
+    phone: subscriber.phone,
+    country: subscriber.country,
+    countryCode: subscriber.countryCode,
   })
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    const data: SubProps = { ...sub }
-    toast.success("Dados atualizados com sucesso")
-    console.log(data)
+    try {
+      const data: UpdateSubscriberDTO = { ...sub }
+      toast.success("Dados atualizados com sucesso")
+      console.log(data)
+      mutate(data)
+    } catch (error) {
+      toast.error("Erro ao atualizar os dados, tente novamente")
+    }
   }
 
   return (
@@ -36,14 +50,7 @@ const EditSubForm = () => {
           onChange={(e) => setSub({ ...sub, name: e.target.value })}
         />
       </Input.Root>
-      <Input.Root>
-        <Input.Label title="Sobrenome" />
-        <Input.Field
-          type="text"
-          value={sub.lastname}
-          onChange={(e) => setSub({ ...sub, lastname: e.target.value })}
-        />
-      </Input.Root>
+
       <Input.Root>
         <Input.Label title="Email" />
         <Input.Field
@@ -52,11 +59,18 @@ const EditSubForm = () => {
           onChange={(e) => setSub({ ...sub, email: e.target.value })}
         />
       </Input.Root>
-      <div className="flex gap-2 items-center self-end">
+
+      <div className="flex gap-2 items-center self-end">       
         <DialogClose>
           <Button label="Cancelar" buttonType="cancel" />
         </DialogClose>
-        <FormButton label="Atualizar dados" icon={Save} className="w-fit" />
+
+        <FormButton
+          className="w-fit"
+          disabled={isPending}
+          label="Atualizar dados"
+          icon={isPending ? Loading : Save}
+        />
       </div>
     </form>
   )

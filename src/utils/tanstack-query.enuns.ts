@@ -1,4 +1,5 @@
 export enum KEYS {
+  CREATE_SUB = "create-sub",
   CREATE_TIP = "create-tip",
   CREATE_USER = "create-user",
   CREATE_POSTS = "create-post",
@@ -17,6 +18,9 @@ export enum KEYS {
   GET_SINGLE_POST = "get-single-post",
 
   GET_USERS = "get-users",
+  DELETE_USER = "delete-user",
+  UPDATED_USER = "update-user",
+  GET_SINGLE_USER = "get-single-user",
 
   GET_PARTNERS = "get-partners",
   UPDATE_PARTNER = "update-partner",
@@ -32,4 +36,9 @@ export enum KEYS {
   UPDATE_SCHEDULE = "update-schedule",
   DELETE_SCHEDULE = "delete-schedule",
   GET_SINGLE_SCHEDULE = "get-single-schedule",
+
+  GET_SUBS = "get-subs",
+  DELETE_SUB = "delete-sub",
+  UPDATE_SUBS = "update-sub",
+  GET_SINGLE_SUB = "get-single-sub",
 }

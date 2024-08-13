@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export const useGetSchedules = (page: string) => {
   return useQuery<ScheduleResponseDTO>({
-    queryKey: [KEYS.GET_SCHEDULES],
+    queryKey: [KEYS.GET_SCHEDULES, page],
     queryFn: () => SchedulePostAPI.getSchedules(page),
   })
 }

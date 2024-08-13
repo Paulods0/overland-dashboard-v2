@@ -17,10 +17,13 @@ export class PostAPI {
   }
 
   public static async getAllPosts(
-    page?: number,
-    category: string = ""
+    page: string = "1",
+    category: string = "",
+    limit: string = "20"
   ): Promise<PostResponse> {
-    const response = await axios.get(`/post?page=${page}&category=${category}`)
+    const response = await axios.get(
+      `/post?page=${page}&category=${category}&limit=${limit}`
+    )
     console.log(response.data)
     return response.data
   }

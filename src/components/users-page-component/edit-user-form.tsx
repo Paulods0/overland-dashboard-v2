@@ -1,37 +1,64 @@
 import { Save } from "lucide-react"
+import { roles } from "./user-form"
+import { toast } from "react-toastify"
+import Loading from "../global/loading"
+import Button from "../ui/button/button"
+import { DialogClose } from "../ui/dialog"
 import { Input } from "@/components/ui/input-field"
 import { Select } from "@/components/ui/select-field"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
-import { UserProps } from "./user-form"
-import { toast } from "react-toastify"
-import Button from "../ui/button/button"
-import { DialogClose } from "../ui/dialog"
+import { UpdateUserDTO, User } from "@/api/users/user.type"
+import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
+import { useUpdateUser } from "@/lib/tanstack-query/users/user-mutations"
 
-const EditUserForm = () => {
-  const [user, setUser] = useState<UserProps>({
-    email: "",
-    name: "",
-    role: "",
-    surname: "",
-    image: "",
-    phone: "",
+type Props = {
+  user: User
+}
+
+const EditUserForm = ({ user }: Props) => {
+  const { mutate, isPending } = useUpdateUser()
+  const [updateUser, setUpdateUser] = useState<UpdateUserDTO>({
+    id: user._id,
+    role: user.role,
+    image: user.image,
+    email: user.email,
+    lastname: user.lastname,
+    firstname: user.firstname,
   })
 
   function handleImage(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
-      setUser({ ...user, image: urlImage })
+      setUpdateUser({ ...updateUser, image: urlImage })
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    try {
+      let newProfileImage: string | undefined = user.image
 
-    const userData: UserProps = { ...user }
-    toast.success("Os dados do usuário foram atualizados com sucesso")
-    console.log(userData)
+      if (updateUser.image) {
+        if (user.image) {
+          await deleteFromFirebase(user.image, "profile")
+        }
+        newProfileImage = await uploadToFirebase(
+          updateUser.image as File,
+          "profile"
+        )
+      }
+
+      const userData: UpdateUserDTO = { ...updateUser, image: newProfileImage }
+
+      mutate(userData)
+      toast.success("Os dados do usuário foram atualizados com sucesso")
+      console.log(userData)
+    } catch (error) {
+      toast.error("Erro ao atualizar os dados do usuário")
+      console.log(error)
+    }
   }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
@@ -39,7 +66,7 @@ const EditUserForm = () => {
         <img
           src={user.image}
           className="size-12 object-contain aspect-square"
-          alt={user.name + user.surname}
+          alt={""}
         />
       )}
       <Input.Root>
@@ -51,8 +78,10 @@ const EditUserForm = () => {
         <Input.Label title="Nome*" />
         <Input.Field
           type="text"
-          value={user.name}
-          onChange={(e) => setUser({ ...user, name: e.target.value })}
+          value={updateUser.firstname}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, firstname: e.target.value })
+          }
         />
       </Input.Root>
 
@@ -60,8 +89,10 @@ const EditUserForm = () => {
         <Input.Label title="Sobrenome*" />
         <Input.Field
           type="text"
-          value={user.surname}
-          onChange={(e) => setUser({ ...user, surname: e.target.value })}
+          value={updateUser.lastname}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, lastname: e.target.value })
+          }
         />
       </Input.Root>
 
@@ -69,36 +100,38 @@ const EditUserForm = () => {
         <Input.Label title="Email*" />
         <Input.Field
           type="email"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
+          value={updateUser.email}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, email: e.target.value })
+          }
         />
       </Input.Root>
 
       <Select.Root>
         <Select.Label label="Role*" />
         <Select.Container
-          defaultValue="admin"
-          onChange={(e) => setUser({ ...user, role: e.target.value })}
+          defaultValue={user.role}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, role: e.target.value })
+          }
         >
-          <Select.Option value={"admin"} label="Admin" />
-          <Select.Option value={"store manager"} label="Gestor de loja" />
-          <Select.Option value={"publisher"} label="Publicador" />
+          {roles.map((role, index) => (
+            <Select.Option key={index} value={role.role} label={role.label} />
+          ))}
         </Select.Container>
       </Select.Root>
 
-      <Input.Root>
-        <Input.Label title="Phone" />
-        <Input.Field
-          type="number"
-          value={user.phone}
-          onChange={(e) => setUser({ ...user, phone: e.target.value })}
-        />
-      </Input.Root>
       <div className="flex gap-2 items-center justify-end">
         <DialogClose asChild>
           <Button label="Cancelar" buttonType="cancel" />
         </DialogClose>
-        <FormButton icon={Save} type="submit" label="Salvar" />
+
+        <FormButton
+          type="submit"
+          disabled={isPending}
+          label="Salvar alterações"
+          icon={isPending ? Loading : Save}
+        />
       </div>
     </form>
   )

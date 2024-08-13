@@ -8,6 +8,7 @@ import { CreateScheduleDTO } from "@/api/schedule/schedule.types"
 import { AUTHOR_ID } from "../add-post-components/add-post-form"
 import { useCreateSchedule } from "@/lib/tanstack-query/schedule/schedule-mutations"
 import Loading from "../global/loading"
+import useIsLoading from "@/hooks/useIsLoading"
 
 type SchedulePostProps = {
   title: string
@@ -15,7 +16,9 @@ type SchedulePostProps = {
 }
 
 const SchedulePostForm = () => {
-  const { mutate, isPending } = useCreateSchedule()
+  const { mutate } = useCreateSchedule()
+  const { isLoading, toggleLoading } = useIsLoading()
+
   const [schedule, setSchedule] = useState<SchedulePostProps>({
     title: "",
     document: null,
@@ -29,12 +32,15 @@ const SchedulePostForm = () => {
 
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    toggleLoading(true)
+    
     try {
       if (!schedule.title || !schedule.document) {
         toast.error("Preencha todos os dados")
+        toggleLoading(false)
         return
       }
-
+      
       const fileDownloadURL = await uploadToFirebase(
         schedule.document,
         "schedule-posts"
@@ -45,12 +51,16 @@ const SchedulePostForm = () => {
         file: fileDownloadURL,
         author: AUTHOR_ID,
       }
+
       mutate(data)
+      toggleLoading(false)
       toast.success("O documento foi enviado com sucesso")
-      reseInputs()
       console.log(data)
+      
+      reseInputs()
     } catch (error) {
       reseInputs()
+      toggleLoading(false)
       console.log(error)
     }
   }
@@ -83,9 +93,9 @@ const SchedulePostForm = () => {
 
       <FormButton
         label="Salvar"
-        disabled={isPending}
+        disabled={isLoading}
         className="self-end"
-        icon={isPending ? Loading : Save}
+        icon={isLoading ? Loading : Save}
       />
     </form>
   )

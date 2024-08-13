@@ -39,7 +39,7 @@ const SchedulePostPage = () => {
           </div>
 
           <SchedulePosts schedules={data!.posts} />
-          <Pagination currentPage={Number(page)} setSearch={setSearch} />
+          <Pagination pages={data!.pages} currentPage={Number(page)} setSearch={setSearch} />
         </section>
       </Container>
     </main>

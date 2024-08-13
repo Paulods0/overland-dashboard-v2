@@ -8,37 +8,43 @@ import Button from "@/components/ui/button/button"
 import { SetURLSearchParams } from "react-router-dom"
 
 type Props = {
+  pages: number
   currentPage: number
   setSearch: SetURLSearchParams
 }
 
 const MAX_VIEW_BUTTONS = 5
-const totalPages = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-]
 
-const Pagination = ({ currentPage, setSearch }: Props) => {
+const Pagination = ({ pages, currentPage, setSearch }: Props) => {
+  // const totalPages = Array.from({ length: pages }, (_, index) => index + 1)
+
   const controls = {
     calculateMaxViewButtons: () => {
       let maxLeft = currentPage - Math.floor(MAX_VIEW_BUTTONS / 2)
       let maxRight = currentPage + Math.floor(MAX_VIEW_BUTTONS / 2)
 
-      if (maxLeft <= 1) {
+      if (maxLeft < 1) {
         maxLeft = 1
         maxRight = MAX_VIEW_BUTTONS
       }
-      if (maxRight > totalPages.length) {
-        maxRight = totalPages.length
-        maxLeft = totalPages.length - (MAX_VIEW_BUTTONS - 1)
+
+      if (maxRight > pages) {
+        maxRight = pages
+        maxLeft = pages - (MAX_VIEW_BUTTONS - 1)
+        if (maxLeft < 1) {
+          maxLeft = 1
+        }
       }
+
       return { maxLeft, maxRight }
     },
+
     nextPage: () => {
       setSearch((state) => {
         let page = Number(state.get("page"))
 
-        if (page > totalPages.length) {
-          state.set("page", String(totalPages.length))
+        if (page >= pages) {
+          state.set("page", String(pages))
           return state
         } else {
           const nextPage = page + 1
@@ -50,7 +56,7 @@ const Pagination = ({ currentPage, setSearch }: Props) => {
     prevPage: () => {
       setSearch((state) => {
         let page = Number(state.get("page"))
-        if (page < 1) {
+        if (page <= 1) {
           state.set("page", "1")
           return state
         } else {
@@ -61,19 +67,31 @@ const Pagination = ({ currentPage, setSearch }: Props) => {
       })
     },
     goTo: (page: number) => {
-      setSearch()
+      setSearch((state) => {
+        state.set("page", String(page))
+        return state
+      })
     },
     goToStart: () => {
-      setSearch()
+      setSearch((state) => {
+        state.set("page", String(1))
+        return state
+      })
     },
     goToEnd: () => {
-      setSearch()
+      setSearch((state) => {
+        state.set("page", String(pages))
+        return state
+      })
     },
   }
 
   const { maxLeft, maxRight } = controls.calculateMaxViewButtons()
 
-  const slicedPages = totalPages.slice(maxLeft - 1, maxRight)
+  const slicedPages = Array.from(
+    { length: maxRight - maxLeft + 1 },
+    (_, i) => i + maxLeft
+  )
 
   return (
     <div className="w-full px-4 lg:px-0 mx-auto justify-center py-8 flex items-center gap-2 lg:w-[90vw]">
