@@ -1,23 +1,50 @@
-import { Input } from "@/components/ui/input-field"
-import { ChangeEvent, FormEvent, useState } from "react"
-import { toast } from "react-toastify"
-import FormButton from "../ui/input-field/form-button"
 import { Save } from "lucide-react"
-import { DialogClose } from "../ui/dialog"
+import { toast } from "react-toastify"
+import Loading from "../global/loading"
 import Button from "../ui/button/button"
+import { DialogClose } from "../ui/dialog"
+import { Select } from "../ui/select-field"
+import useIsLoading from "@/hooks/useIsLoading"
+import { uploadToFirebase } from "@/lib/firebase"
+import { Input } from "@/components/ui/input-field"
+import FormButton from "../ui/input-field/form-button"
+import { ChangeEvent, FormEvent, useState } from "react"
+import { CreateProductDTO } from "@/api/product/product.types"
+import { useCreateProduct } from "@/lib/tanstack-query/product/product-mutation"
 
-export type ProductProps = {
-  name: string
-  image: string
-  price: string
-  description: string
-}
+export const productCategories = [
+  {
+    name: "Camping Gear",
+    value: "camping-gear",
+  },
+  {
+    name: "Car Gear",
+    value: "car-gear",
+  },
+  {
+    name: "Vestuário",
+    value: "vestuário",
+  },
+  {
+    name: "Merchandising",
+    value: "merchandising",
+  },
+  {
+    name: "Cursos",
+    value: "cursos",
+  },
+]
 
 const AddStoreForm = () => {
-  const [product, setProduct] = useState<ProductProps>({
+  const { mutate } = useCreateProduct()
+  const { isLoading, toggleLoading } = useIsLoading()
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+
+  const [product, setProduct] = useState<CreateProductDTO>({
     name: "",
     price: "",
     image: "",
+    category: "",
     description: "",
   })
 
@@ -25,35 +52,59 @@ const AddStoreForm = () => {
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
-      setProduct({ ...product, image: urlImage })
+      setProduct({ ...product, image: image })
+      setPreviewImage(urlImage)
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function resetInputs() {
+    setProduct({
+      name: "",
+      image: "",
+      price: "",
+      category: "",
+      description: "",
+    })
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (
-      !product.name ||
-      !product.price ||
-      !product.image ||
-      !product.description
-    ) {
-      toast.error("Preencha todos os campos obrigatórios")
-      return
+    toggleLoading(true)
+
+    try {
+      if (
+        !product.name ||
+        !product.price ||
+        !product.image ||
+        !product.category
+      ) {
+        toast.error("Preencha todos os campos obrigatórios")
+        return
+      }
+      const imageURL = await uploadToFirebase(product.image as File, "products")
+      const data: CreateProductDTO = { ...product, image: imageURL }
+
+      mutate(data)
+      toast.success("Artigo adicionado com sucesso")
+      resetInputs()
+    } catch (error) {
+      console.error("handleSubmit ~ error", error)
+      toast.error("Erro ao salvar o artigo, tente novamente")
+    } finally {
+      toggleLoading(false)
     }
-    const data: ProductProps = { ...product }
-    toast.success("Artigo adicionado com sucesso")
-    console.log(data)
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      {product.image && (
+      {previewImage && (
         <img
-          src={product.image}
+          src={previewImage}
           className="size-14 object-contain"
           alt={product.name}
         />
       )}
+
       <Input.Root>
         <Input.Label title="Imagem do artigo*" />
         <Input.Field type="file" onChange={handleImage} accept="image/*" />
@@ -77,8 +128,29 @@ const AddStoreForm = () => {
         />
       </Input.Root>
 
+      <Select.Root>
+        <Select.Label label="Categoria*" />
+        <Select.Container
+          defaultValue="escolher"
+          onChange={(e) => setProduct({ ...product, category: e.target.value })}
+        >
+          <Select.Option
+            disabled
+            label={"Escolha uma categoria"}
+            value={"escolher"}
+          />
+          {productCategories.map((category, index) => (
+            <Select.Option
+              key={index}
+              label={category.name}
+              value={category.value}
+            />
+          ))}
+        </Select.Container>
+      </Select.Root>
+
       <Input.Root>
-        <Input.Label title="Descrição*" />
+        <Input.Label title="Descrição(opcional)" />
         <Input.TextArea
           value={product.description}
           onChange={(e) =>
@@ -86,12 +158,17 @@ const AddStoreForm = () => {
           }
         />
       </Input.Root>
+
       <div className="flex items-center justify-end gap-2">
         <DialogClose asChild>
           <Button label="Cancelar" buttonType="cancel" />
         </DialogClose>
 
-        <FormButton icon={Save} label="Salvar" />
+        <FormButton
+          label="Salvar"
+          disabled={isLoading}
+          icon={isLoading ? Loading : Save}
+        />
       </div>
     </form>
   )

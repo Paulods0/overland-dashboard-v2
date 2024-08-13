@@ -11,13 +11,17 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { UpdateUserDTO, User } from "@/api/users/user.type"
 import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
 import { useUpdateUser } from "@/lib/tanstack-query/users/user-mutations"
+import useIsLoading from "@/hooks/useIsLoading"
 
 type Props = {
   user: User
 }
 
 const EditUserForm = ({ user }: Props) => {
-  const { mutate, isPending } = useUpdateUser()
+  const { mutate } = useUpdateUser()
+  const { isLoading, toggleLoading } = useIsLoading()
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+
   const [updateUser, setUpdateUser] = useState<UpdateUserDTO>({
     id: user._id,
     role: user.role,
@@ -31,16 +35,19 @@ const EditUserForm = ({ user }: Props) => {
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
+      setPreviewImage(urlImage)
       setUpdateUser({ ...updateUser, image: urlImage })
     }
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    toggleLoading(true)
     try {
       let newProfileImage: string | undefined = user.image
+      console.log(newProfileImage)
 
-      if (updateUser.image) {
+      if (previewImage) {
         if (user.image) {
           await deleteFromFirebase(user.image, "profile")
         }
@@ -54,21 +61,36 @@ const EditUserForm = ({ user }: Props) => {
 
       mutate(userData)
       toast.success("Os dados do usuário foram atualizados com sucesso")
+      toggleLoading(false)
       console.log(userData)
     } catch (error) {
+      toggleLoading(false)
       toast.error("Erro ao atualizar os dados do usuário")
       console.log(error)
     }
   }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      {user.image && (
+      {previewImage ? (
+        <img
+          src={previewImage}
+          className="size-12 object-contain aspect-square"
+          alt={user.firstname}
+        />
+      ) : user.image ? (
         <img
           src={user.image}
           className="size-12 object-contain aspect-square"
-          alt={""}
+          alt={user.firstname}
+        />
+      ) : (
+        <img
+          src={"/icons/user.png"}
+          className="size-12 object-contain aspect-square"
+          alt={"Perfil"}
         />
       )}
+
       <Input.Root>
         <Input.Label title="Imagem" />
         <Input.Field type="file" accept="image/*" onChange={handleImage} />
@@ -128,9 +150,9 @@ const EditUserForm = ({ user }: Props) => {
 
         <FormButton
           type="submit"
-          disabled={isPending}
+          disabled={isLoading}
           label="Salvar alterações"
-          icon={isPending ? Loading : Save}
+          icon={isLoading ? Loading : Save}
         />
       </div>
     </form>

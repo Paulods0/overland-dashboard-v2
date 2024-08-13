@@ -3,10 +3,10 @@ import { Product, ProductResponseDTO } from "@/api/product/product.types"
 import { KEYS } from "@/utils/tanstack-query.enuns"
 import { useQuery } from "@tanstack/react-query"
 
-export const useGetProducts = (page: string) => {
+export const useGetProducts = (page: string, category:string) => {
   return useQuery<ProductResponseDTO>({
-    queryKey: [KEYS.GET_PRODUCTS],
-    queryFn: () => ProductAPI.getProducts(page),
+    queryKey: [KEYS.GET_PRODUCTS, page, category],
+    queryFn: () => ProductAPI.getProducts(page, category),
   })
 }
 

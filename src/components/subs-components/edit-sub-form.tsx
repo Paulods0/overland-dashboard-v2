@@ -1,7 +1,9 @@
+
 import {
   Subscriber,
   UpdateSubscriberDTO,
 } from "@/api/subscriber/subscriber.types"
+
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
 import Loading from "../global/loading"
@@ -60,7 +62,7 @@ const EditSubForm = ({ subscriber }: Props) => {
         />
       </Input.Root>
 
-      <div className="flex gap-2 items-center self-end">       
+      <div className="flex gap-2 items-center self-end">
         <DialogClose>
           <Button label="Cancelar" buttonType="cancel" />
         </DialogClose>

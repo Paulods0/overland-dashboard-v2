@@ -1,4 +1,5 @@
 export type Product = {
+  _id: string
   name: string
   category: string
   price: string
@@ -9,11 +10,11 @@ export type Product = {
 
 export interface CreateProductDTO {
   name: string
-  category: string
   price: string
-  image: string
-  quantity: number
+  category: string
+  quantity?: number
   description?: string
+  image: string | File | null
 }
 
 export interface ProductResponseDTO {

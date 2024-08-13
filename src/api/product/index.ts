@@ -15,8 +15,8 @@ export class ProductAPI {
     }
   }
 
-  static async getProducts(page: string): Promise<ProductResponseDTO> {
-    const response = await axios.get(`/product?page=${page}`)
+  static async getProducts(page: string, category:string): Promise<ProductResponseDTO> {
+    const response = await axios.get(`/product?page=${page}&category=${category}`)
     return response.data
   }
 

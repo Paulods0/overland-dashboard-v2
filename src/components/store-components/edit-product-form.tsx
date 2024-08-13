@@ -3,38 +3,65 @@ import { toast } from "react-toastify"
 import Button from "../ui/button/button"
 import { Input } from "../ui/input-field"
 import { DialogClose } from "../ui/dialog"
+import { deleteFromFirebase } from "@/lib/firebase"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
+import { Product, UpdateProductDTO } from "@/api/product/product.types"
+import useIsLoading from "@/hooks/useIsLoading"
+import { useUpdateProduct } from "@/lib/tanstack-query/product/product-mutation"
+import Loading from "../global/loading"
+import { productCategories } from "./add-store-form"
+import { Select } from "../ui/select-field"
 
-type ProductProps = {
-  name?: string
-  image?: string
-  price?: string
-  description?: string
+type Props = {
+  data: Product
 }
 
-const EditProductForm = () => {
-  const [product, setProduct] = useState<ProductProps>({
-    name: "",
-    price: "",
-    image: "",
-    description: "",
+const EditProductForm = ({ data }: Props) => {
+  const { mutate } = useUpdateProduct()
+  const { isLoading, toggleLoading } = useIsLoading()
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [product, setProduct] = useState<UpdateProductDTO>({
+    id: data._id,
+    name: data.name,
+    image: data.image,
+    price: data.price,
+    category: data.category,
+    description: data.description,
   })
 
   function handleImage(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
+      setPreviewImage(urlImage)
       setProduct({ ...product, image: urlImage })
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    toggleLoading(true)
+    try {
+      let newImage: string | undefined = data.image
 
-    const data: ProductProps = { ...product }
-    toast.success("Artigo atualizado com sucesso")
-    console.log(data)
+      if (previewImage) {
+        await deleteFromFirebase(data.image, "products")
+        newImage = product.image
+      }
+      const updatedData: UpdateProductDTO = { ...product, image: newImage }
+      mutate(updatedData)
+
+      toggleLoading(false)
+      toast.success("Artigo atualizado com sucesso")
+
+      console.log(updatedData)
+    } catch (error) {
+      console.log(error)
+      toggleLoading(false)
+      toast.error("Erro ao atualizar os dados")
+    }
   }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
@@ -68,6 +95,22 @@ const EditProductForm = () => {
         />
       </Input.Root>
 
+      <Select.Root>
+        <Select.Label label="Categoria*" />
+        <Select.Container
+          defaultValue={data.category}
+          onChange={(e) => setProduct({ ...product, category: e.target.value })}
+        >
+          {productCategories.map((category, index) => (
+            <Select.Option
+              key={index}
+              label={category.name}
+              value={category.value}
+            />
+          ))}
+        </Select.Container>
+      </Select.Root>
+
       <Input.Root>
         <Input.Label title="Descrição*" />
         <Input.TextArea
@@ -83,8 +126,9 @@ const EditProductForm = () => {
         </DialogClose>
 
         <FormButton
-          icon={Save}
+          disabled={isLoading}
           label="Salvar alterações"
+          icon={isLoading ? Loading : Save}
           className="border-none w-fit bg-indigo-700 text-white"
         />
       </div>
