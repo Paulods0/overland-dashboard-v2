@@ -15,13 +15,26 @@ export class UserAPI {
     }
   }
 
-  static async getUsers(page: string): Promise<UserResponseDTO> {
-    const response = await axios.get(`/auth?page=${page}`)
+  static async getUsers(
+    page?: string,
+    limit?: string
+  ): Promise<UserResponseDTO> {
+    const response = await axios.get("/auth", {
+      params: {
+        page,
+        limit,
+      },
+    })
     console.log(response)
     return response.data
   }
+
   static async getSingleUser(id: string): Promise<User> {
-    const response = await axios.get(`/auth/${id}`)
+    const response = await axios.get("/auth/", {
+      params: {
+        id,
+      },
+    })
     return response.data
   }
 

@@ -10,13 +10,14 @@ import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import FilterContainer from "@/components/all-posts-components/filter-container"
 
 const AllPosts = () => {
-  const [search, setSearch] = useSearchParams({page: "1",category: "",limit: "20"})
+  const [search, setSearch] = useSearchParams({page: "1",category: "",limit: ""})
 
   const currentPage = search.get("page") || "1"
   const category = search.get("category") || ""
-  const limit = search.get("limit") || "20"
+  const limit = search.get("limit") || "2"
 
   const { data, isLoading } = useGetAllPosts(currentPage, category, limit)
+  console.log(data)
 
   if (isLoading) return <LoadingData />
   if (!data?.posts) return <NothingToShow name="post" />
@@ -42,8 +43,8 @@ const AllPosts = () => {
           </div>
           <Pagination
             pages={data!.pages}
-            currentPage={1}
             setSearch={setSearch}
+            currentPage={Number(currentPage)}
           />
         </section>
       </Container>

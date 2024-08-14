@@ -7,14 +7,13 @@ type Props = {
 }
 
 const FilterContainer = ({ setSearch }: Props) => {
-
   function handleCategory(category: string) {
     setSearch((state) => {
       state.set("category", category)
       return state
     })
   }
-  
+
   return (
     <div className="flex items-center w-full gap-4 flex-wrap">
       <PostFilter handleCategory={handleCategory} />

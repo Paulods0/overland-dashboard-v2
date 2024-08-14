@@ -20,7 +20,11 @@ const PostCard = ({ post }: Props) => {
           <p className="text-sm">{post.category}</p>
           <p className="italic text-sm">{post.date}</p>
         </div>
-        <PostActionButtons postId={post._id} />
+        <PostActionButtons
+          postId={post._id}
+          author={post.author}
+          mainImage={post.mainImage}
+        />
       </div>
     </Box>
   )

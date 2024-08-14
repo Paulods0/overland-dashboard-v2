@@ -16,6 +16,7 @@ export enum KEYS {
   UPDATE_POST = "update-post",
   DELETE_POST = "delete-post",
   GET_SINGLE_POST = "get-single-post",
+  GET_HIGHLIGHTED_POST = "get-highlighted-post",
 
   GET_USERS = "get-users",
   DELETE_USER = "delete-user",

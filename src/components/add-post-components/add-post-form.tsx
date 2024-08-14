@@ -1,48 +1,44 @@
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
 import Loading from "../global/loading"
+import { categories } from "./edit-post-form"
 import Box from "../../components/global/box"
 import useIsLoading from "@/hooks/useIsLoading"
 import { uploadToFirebase } from "@/lib/firebase"
+import NothingToShow from "../global/nothing-to-show"
 import { CreatePostDTO } from "@/api/post/post.types"
 import FormButton from "../ui/input-field/form-button"
 import { Input } from "../../components/ui/input-field"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { Select } from "../../components/ui/select-field"
+import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 import { useCreatePost } from "@/lib/tanstack-query/post/post-mutations"
 
 type FormProps = {
   content: string
 }
 
-export type TPost = {
-  title: string
-  tags?: string
-  date: string
-  author: string
-  latLang: string
-  category: string
-  highlighted: boolean
-  authorNotes?: string
-  mainImage: File | string | null
-}
-
 export const AUTHOR_ID = "66b50327c6794b27ee46c6f1"
 
 const AddPostForm = ({ content }: FormProps) => {
   const { mutate } = useCreatePost()
+  const { data: users, isLoading: isLoadingUsers } = useGetUsers("", "100")
   const { isLoading, toggleLoading } = useIsLoading()
-  const [previewImg, setPreviewImg] = useState<string | null>(null)
 
-  const [post, setPost] = useState<TPost>({
+  const [previewImg, setPreviewImg] = useState<string | null>(null)
+  const [coordinates, setCoordinates] = useState<string | undefined>(undefined)
+
+  const [post, setPost] = useState<CreatePostDTO>({
+    content,
     date: "",
     tags: "",
     title: "",
-    author: AUTHOR_ID,
-    latLang: "",
     category: "",
+    latitude: "",
+    author_id: "",
+    longitude: "",
     mainImage: "",
-    authorNotes: "",
+    author_notes: "",
     highlighted: false,
   })
 
@@ -50,69 +46,84 @@ const AddPostForm = ({ content }: FormProps) => {
     if (e.target.files) {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
-      setPost({ ...post, mainImage: image })
       setPreviewImg(urlImage)
+      setPost({ ...post, mainImage: image })
     }
   }
+  console.log(post)
 
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     toggleLoading(true)
+    console.log(post)
     try {
       if (
         !post.title ||
         !post.mainImage ||
         !post.category ||
-        !post.author ||
+        !post.author_id ||
         !post.date
       ) {
         toast.error("Por favor preencha todos os campos obrigatórios")
         toggleLoading(false)
         throw new Error("Form error, empty input")
       }
-      const coordinates = post.latLang ? post.latLang.split(",") : ""
-      const geoCoordinates = {
-        latitude: coordinates[0],
-        longitude: coordinates[1],
+
+      if (post.category === "Passeios") {
+        if (!coordinates || !coordinates.includes(",")) {
+          toast.error(
+            "Por favor insira a latitude e a longitude separadas por vírgula."
+          )
+          toggleLoading(false)
+          return
+        }
       }
 
       const imageURL = await uploadToFirebase(post.mainImage as File, "posts")
-      const tagsArr = post.tags ? post.tags.split(",") : ""
+      const [lat, long] =
+        coordinates && coordinates.includes(",")
+          ? coordinates.split(",")
+          : [undefined, undefined]
 
       const data: CreatePostDTO = {
-        tags: tagsArr,
+        latitude: lat,
+        longitude: long,
+        tags: post.tags,
         date: post.date,
         content: content,
         title: post.title,
         mainImage: imageURL,
-        author_id: post.author,
         category: post.category,
+        author_id: post.author_id,
         highlighted: post.highlighted,
-        author_notes: post.authorNotes,
-        latitude: geoCoordinates.latitude,
-        longitude: geoCoordinates.longitude,
+        author_notes: post.author_notes,
       }
+      console.log(data)
+
       mutate(data)
       toggleLoading(false)
       toast.success("Post adicinado com sucesso")
       resetInputs()
     } catch (error: any) {
       console.log(error)
-      toast.error(error.response.data.message)
-      resetInputs()
+      toast.error(error)
     }
   }
 
   function resetInputs() {
+    setCoordinates(undefined)
+    setPreviewImg(null)
     setPost({
       tags: "",
       date: "",
       title: "",
-      author: "",
-      latLang: "",
-      category: "",
-      mainImage: "",
-      authorNotes: "",
+      content: "",
+      latitude: "",
+      author_id: "",
+      longitude: "",
+      mainImage: null,
+      category: "none",
+      author_notes: "",
       highlighted: false,
     })
   }
@@ -175,7 +186,10 @@ const AddPostForm = ({ content }: FormProps) => {
           <Input.Field
             type="text"
             value={post.tags}
-            onChange={(e) => setPost({ ...post, tags: e.target.value })}
+            onChange={(e) => {
+              const tags = e.target.value.split(",")
+              setPost({ ...post, tags })
+            }}
           />
         </Input.Root>
 
@@ -183,9 +197,9 @@ const AddPostForm = ({ content }: FormProps) => {
           <Input.Root>
             <Input.Label title="Latitude e Longitude" />
             <Input.Field
-              type="number"
-              value={post.latLang}
-              onChange={(e) => setPost({ ...post, latLang: e.target.value })}
+              type="text"
+              value={coordinates}
+              onChange={(e) => setCoordinates(e.target.value)}
             />
           </Input.Root>
         )}
@@ -194,34 +208,46 @@ const AddPostForm = ({ content }: FormProps) => {
           <Input.Label title="Notas do autor (opcional)" />
           <Input.TextArea
             className="h-20"
-            value={post.authorNotes}
-            onChange={(e) => setPost({ ...post, authorNotes: e.target.value })}
+            value={post.author_notes}
+            onChange={(e) => setPost({ ...post, author_notes: e.target.value })}
           />
         </Input.Root>
 
         <Select.Root>
           <Select.Label label="Autor" />
-          <Select.Container
-            onChange={(e) => setPost({ ...post, author: e.target.value })}
-          >
-            <Select.Option value={"user-1"} label="User 1" />
-            <Select.Option value={"user-2"} label="User 2" />
-          </Select.Container>
+          {isLoadingUsers ? (
+            <Loading />
+          ) : !users?.users ? (
+            <NothingToShow name="usuário" />
+          ) : (
+            <Select.Container
+              onChange={(e) => setPost({ ...post, author_id: e.target.value })}
+            >
+              {users.users.map((user, index) => (
+                <Select.Option
+                  key={index}
+                  value={user._id}
+                  label={`${user.firstname} ${user.lastname}`}
+                />
+              ))}
+            </Select.Container>
+          )}
         </Select.Root>
 
         <Select.Root>
           <Select.Label label="Categoria" />
           <Select.Container
+            defaultValue="none"
             onChange={(e) => setPost({ ...post, category: e.target.value })}
           >
-            <Select.Option value="Passeios" label="Passeios" />
-            <Select.Option value="Reviews" label="Reviews" />
-            <Select.Option value="Histórias" label="Histórias" />
-            <Select.Option value="Jornal Overland" label="Jornal Overland" />
-            <Select.Option
-              value="Overland Explorer"
-              label="Overland Explorer"
-            />
+            <Select.Option disabled value={"none"} label={"Categoria"} />
+            {categories.map((category, index) => (
+              <Select.Option
+                key={index}
+                value={category.value}
+                label={category.label}
+              />
+            ))}
           </Select.Container>
         </Select.Root>
       </form>

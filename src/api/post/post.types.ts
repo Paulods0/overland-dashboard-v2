@@ -1,3 +1,10 @@
+export type Author = {
+  _id: string
+  email: string
+  image?: string
+  lastname: string
+  firstname: string
+}
 export interface Post {
   _id: string
   date: string
@@ -5,11 +12,11 @@ export interface Post {
   title: string
   views: number
   rating: number
-  author: string
+  author: Author
   content: string
   category: string
   mainImage: string
-  latitude?: number
+  latitude?: string
   longitude?: string
   highlighted: boolean
   author_notes?: string
@@ -21,13 +28,13 @@ export interface CreatePostDTO {
   title: string
   content: string
   category: string
-  latitude: string
-  longitude: string
+  latitude?: string
+  longitude?: string
   author_id: string
-  mainImage: string
   highlighted: boolean
   author_notes?: string
   tags?: string | string[]
+  mainImage: string | File | null
 }
 
 export interface UpdatePostDTO {
@@ -39,8 +46,8 @@ export interface UpdatePostDTO {
   latitude?: string
   longitude?: string
   author_id?: string
-  mainImage?: string
   highlighted?: boolean
   author_notes?: string
   tags?: string | string[]
+  mainImage?: string | File | null
 }

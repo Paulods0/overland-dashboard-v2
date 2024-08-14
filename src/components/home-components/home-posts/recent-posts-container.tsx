@@ -5,7 +5,7 @@ import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import Loading from "@/components/global/loading"
 
 const RecentPostsContainer = () => {
-  const { data, isLoading } = useGetAllPosts()
+  const { data, isLoading } = useGetAllPosts("","","12100")
 
   if (isLoading) {
     return (

@@ -4,11 +4,13 @@ import Underline from "@tiptap/extension-underline"
 import { useEditor, EditorContent } from "@tiptap/react"
 
 type Props = {
-  content: string
+  content?: string
   setContent: (newCont: string) => void
 }
 
 const TipTapEditor = ({ content, setContent }: Props) => {
+  console.log(content)
+
   function handleContent(newContent: string) {
     setContent(newContent)
   }

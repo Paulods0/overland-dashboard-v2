@@ -13,23 +13,23 @@ export const useCreatePost = () => {
   })
 }
 
-export const useUpdatePost = (data: UpdatePostDTO) => {
+export const useUpdatePost = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationKey: [KEYS.UPDATE_POST],
-    mutationFn: () => PostAPI.updatePost(data),
+    mutationFn: PostAPI.updatePost,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: [KEYS.GET_POSTS] }),
   })
 }
 
-export const useDeletePost = (id: string) => {
+export const useDeletePost = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationKey: [KEYS.DELETE_POST],
-    mutationFn: () => PostAPI.deletePost(id),
+    mutationFn: PostAPI.deletePost,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: [KEYS.GET_POSTS] }),
   })

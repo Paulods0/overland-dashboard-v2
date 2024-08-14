@@ -17,9 +17,9 @@ export class PostAPI {
   }
 
   public static async getAllPosts(
-    page: string = "1",
-    category: string = "",
-    limit: string = "20"
+    page?: string,
+    limit?: string,
+    category?: string,
   ): Promise<PostResponse> {
     const response = await axios.get(
       `/post?page=${page}&category=${category}&limit=${limit}`
@@ -30,7 +30,11 @@ export class PostAPI {
 
   public static async getSinglePost(id: string): Promise<Post> {
     const response = await axios.get(`/post/${id}`)
-    console.log(response.data)
+    return response.data
+  }
+
+  public static async getHiglightedPost(): Promise<Post> {
+    const response = await axios.get("/post/get/highlighted-post")
     return response.data
   }
 
