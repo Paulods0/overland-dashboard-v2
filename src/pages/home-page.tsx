@@ -1,8 +1,8 @@
 import Container from "../components/global/container"
 import CardsContainer from "../components/home-components/home-card/cards-container"
 import UsersContainer from "../components/home-components/home-users/users-container"
-import RecentPostsContainer from "../components/home-components/home-posts/recent-posts-container"
 import HighlightedCard from "@/components/home-components/highlighted-card/highlighted-card"
+import RecentPostsContainer from "../components/home-components/home-posts/recent-posts-container"
 
 const HomePage = () => {
   return (

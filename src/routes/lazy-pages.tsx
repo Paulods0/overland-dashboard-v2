@@ -6,6 +6,7 @@ const SubsPage = lazy(() => import("../pages/subs-page"))
 const UsersPage = lazy(() => import("../pages/users-page"))
 const StorePage = lazy(() => import("../pages/store-page"))
 const LoginPage = lazy(() => import("../pages//login-page"))
+const EditTipPage = lazy(() => import("../pages/edit-tip-page"))
 const PartnersPage = lazy(() => import("../pages/partners-page"))
 const EditPostPage = lazy(() => import("../pages/edit-post-page"))
 const AllPosts = lazy(() => import("../pages/all-posts-page/all-posts"))
@@ -27,6 +28,7 @@ export const Page = {
   StorePage,
   AddPostPage,
   AddTipsPage,
+  EditTipPage,
   EditPostPage,
   PartnersPage,
   SelectPostType,

@@ -1,28 +1,33 @@
 import Box from "../global/box"
 import { Save } from "lucide-react"
+import { toast } from "react-toastify"
+import Loading from "../global/loading"
 import { Input } from "../ui/input-field"
 import { Select } from "../ui/select-field"
+import useIsLoading from "@/hooks/useIsLoading"
+import { uploadToFirebase } from "@/lib/firebase"
 import { CreateTipDTO } from "@/api/tips/tip.types"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
-import { AUTHOR_ID } from "../add-post-components/add-post-form"
-import { uploadToFirebase } from "@/lib/firebase"
 import { useCreateTip } from "@/lib/tanstack-query/tip/tip-mutations"
-import { toast } from "react-toastify"
-import Loading from "../global/loading"
+import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 
 type TipsProps = {
   content: string
 }
 
+const TIP_CATEGORY = "dicas"
+
 const AddTipsForm = ({ content }: TipsProps) => {
-  const { mutate, isPending } = useCreateTip()
+  const { mutate } = useCreateTip()
+  const { data: users } = useGetUsers("", "100")
+
+  const { isLoading, toggleLoading } = useIsLoading()
 
   const [tip, setTip] = useState<CreateTipDTO>({
-    author: AUTHOR_ID,
     tags: "",
-    date: "",
     title: "",
+    author: "",
     image: null,
     content: "",
     category: "",
@@ -43,34 +48,37 @@ const AddTipsForm = ({ content }: TipsProps) => {
 
   async function handleSubmitForm(e: FormEvent) {
     e.preventDefault()
+    toggleLoading(true)
     try {
       if (!tip.title || !tip.author || !tip.image) {
-        alert("Preencha todos os dados")
+        toast.error("Preencha todos os dados")
+        toggleLoading(false)
         return
       }
 
       const downlodURL = await uploadToFirebase(tip.image as File, "tips")
-      const tagsArr = typeof tip.tags === "string" ? tip.tags.split(",") : ""
 
       const data: CreateTipDTO = {
         content,
-        tags: tagsArr,
-        date: tip.date,
-        category: "tip",
+        tags: tip.tags,
+        category: TIP_CATEGORY,
         title: tip.title,
         image: downlodURL,
         author: tip.author,
         author_notes: tip.author_notes,
       }
+
       mutate(data, {
         onSuccess: () => console.log(data),
         onError: (error) => console.error(error),
       })
 
-      toast.success("Publicação feita com sucesso")
+      toggleLoading(false)
+      toast.success("Dica adicionada com sucesso")
     } catch (error) {
       console.log(error)
       toast.error("Erro ao publicar")
+      toggleLoading(false)
     }
   }
 
@@ -80,8 +88,8 @@ const AddTipsForm = ({ content }: TipsProps) => {
         <FormButton
           type="submit"
           label="Publicar"
-          disabled={isPending}
-          icon={isPending ? Loading : Save}
+          disabled={isLoading}
+          icon={isLoading ? Loading : Save}
           className="w-full bg-indigo-700 text-white border-none self-end"
         />
         <Input.Root>
@@ -106,21 +114,15 @@ const AddTipsForm = ({ content }: TipsProps) => {
           <Input.Field type="file" accept="image/*" onChange={handleImage} />
         </Input.Root>
 
-        <Input.Root className="w-full">
-          <Input.Label title="Data de criação" />
-          <Input.Field
-            type="date"
-            value={tip.date}
-            onChange={(e) => setTip({ ...tip, date: e.target.value })}
-          />
-        </Input.Root>
-
         <Input.Root>
           <Input.Label title="Tags (opcional e separar por vírgula)" />
           <Input.Field
             type="text"
             value={tip.tags}
-            onChange={(e) => setTip({ ...tip, tags: e.target.value })}
+            onChange={(e) => {
+              const tags = e.target.value.split(",")
+              setTip({ ...tip, tags: tags })
+            }}
           />
         </Input.Root>
 
@@ -134,13 +136,20 @@ const AddTipsForm = ({ content }: TipsProps) => {
         </Input.Root>
 
         <Select.Root>
-          <Select.Label label="Autor" />
+          <Select.Label label="Autor*" />
           <Select.Container
-            defaultValue={tip.author}
+            defaultValue={"none"}
             onChange={(e) => setTip({ ...tip, author: e.target.value })}
           >
-            <Select.Option value="user-1" label="User 1" />
-            <Select.Option value="user-" label="User 2" />
+            <Select.Option disabled value="none" label="Autor" />
+
+            {users?.users.map((user, index) => (
+              <Select.Option
+                key={index}
+                value={user._id}
+                label={`${user.firstname} ${user.lastname}`}
+              />
+            ))}
           </Select.Container>
         </Select.Root>
       </form>

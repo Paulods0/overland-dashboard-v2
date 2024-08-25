@@ -17,6 +17,7 @@ export interface CreateUserDTO {
   image?: File | string | null
 }
 export interface UserResponseDTO {
+  total: number
   pages: number
   users: User[]
 }

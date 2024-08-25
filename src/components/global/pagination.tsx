@@ -8,7 +8,7 @@ import Button from "@/components/ui/button/button"
 import { SetURLSearchParams } from "react-router-dom"
 
 type Props = {
-  pages: number
+  pages?: number
   currentPage: number
   setSearch: SetURLSearchParams
 }
@@ -16,7 +16,7 @@ type Props = {
 const MAX_VIEW_BUTTONS = 5
 
 const Pagination = ({ pages, currentPage, setSearch }: Props) => {
-  // const totalPages = Array.from({ length: pages }, (_, index) => index + 1)
+  if (!pages) return
 
   const controls = {
     calculateMaxViewButtons: () => {

@@ -1,8 +1,7 @@
-import { useNavigate } from "react-router-dom"
-import Button from "../../components/ui/button/button"
-import { Input } from "../../components/ui/input-field"
-
 import { Eye } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import Button from "@/components/ui/button/button"
+import { Input } from "@/components/ui/input-field/index"
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -22,13 +21,13 @@ const LoginPage = () => {
 
       <div className="flex flex-col w-full md:w-[80vw] lg:w-[20vw] items-center justify-center px-6 lg:px-0">
         <h1 className="text-2xl text-white mt-2 mb-4">Faça o seu login</h1>
-        <form className="flex flex-col gap-2 w-full">
+        <form className="flex flex-col text-baseColor gap-2 w-full">
           <Input.Root>
             <Input.Label title="Email" />
             <Input.Field type="email" />
           </Input.Root>
 
-          <Input.Root customStyle="relative">
+          <Input.Root className="relative">
             <Input.Label title="Palavra-passe" />
             <Input.Field type="password" icon={Eye} />
           </Input.Root>
@@ -37,7 +36,7 @@ const LoginPage = () => {
             type="submit"
             label="Entrar"
             onClick={Login}
-            customStyle="bg-white text-black mt-3"
+            className="bg-white text-black mt-3 w-full"
           />
         </form>
       </div>

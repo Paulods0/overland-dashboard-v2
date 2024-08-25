@@ -10,8 +10,8 @@ const NavigationBar = () => {
             <NavLink
               className={({ isActive }) =>
                 isActive
-                  ? "text-indigo-700 text-lg font-medium"
-                  : "text-zinc-500 text-lg hover:text-zinc-400 transition-all duration-200 font-medium"
+                  ? "text-indigo-700 text-base font-medium"
+                  : "text-zinc-500 text-base hover:text-zinc-400 transition-all duration-200 font-medium"
               }
               to={link.link}
             >

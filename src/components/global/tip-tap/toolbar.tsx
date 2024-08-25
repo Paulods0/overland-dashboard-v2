@@ -1,15 +1,17 @@
 import { Editor } from "@tiptap/react"
 import {
   Bold,
+  List,
+  Redo,
+  Undo,
+  Quote,
+  Image,
+  Italic,
+  Youtube,
   Heading1,
   Heading2,
-  Italic,
-  List,
-  ListOrdered,
-  Quote,
-  Redo,
   Underline,
-  Undo,
+  ListOrdered,
 } from "lucide-react"
 //@ts-ignore
 import ToolbarButton from "./toolbar-button"
@@ -20,6 +22,34 @@ type Props = {
 
 const Toolbar = ({ editor }: Props) => {
   if (!editor) return null
+
+  function addImage() {
+    const input = document.createElement("input")
+    input.type = "file"
+    input.accept = "image/*"
+
+    input.onchange = (event: Event) => {
+      const target = event.target as HTMLInputElement
+      const file = target.files?.[0]
+
+      if (file) {
+        const reader = new FileReader()
+
+        reader.onload = () => {
+          const url = reader.result as string
+          editor!.chain().focus().setImage({ src: url }).run()
+        }
+        reader.readAsDataURL(file)
+      }
+    }
+    input.click()
+  }
+  const addYouTubeVideo = () => {
+    const url = prompt("Insira o URL do vídeo do YouTube:")
+    if (url) {
+      editor.commands.setYoutubeVideo({ src: url })
+    }
+  }
 
   return (
     <div className="px-4 py-3 rounded-lg flex justify-between items-start gap-5 flex-wrap border border-zinc-600/60">
@@ -112,6 +142,18 @@ const Toolbar = ({ editor }: Props) => {
             e.preventDefault()
             editor.chain().focus().redo().run()
           }}
+        />
+
+        <ToolbarButton
+          icon={Image}
+          isActive={editor.isActive("image")}
+          onClick={addImage}
+        />
+
+        <ToolbarButton
+          icon={Youtube}
+          isActive={editor.isActive("youtube")}
+          onClick={addYouTubeVideo}
         />
       </div>
     </div>

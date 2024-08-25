@@ -76,6 +76,10 @@ export const router = createBrowserRouter([
         path: "post/:id",
         element: <Page.EditPostPage />,
       },
+      {
+        path: "dica/:id",
+        element: <Page.EditTipPage />,
+      },
     ],
   },
 ])

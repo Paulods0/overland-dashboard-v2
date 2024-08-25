@@ -52,7 +52,7 @@ const UsersPage = () => {
         </section>
         <Pagination
           currentPage={Number(currentPage)}
-          pages={data!.pages}
+          pages={data?.pages}
           setSearch={setSearch}
         />
       </Container>

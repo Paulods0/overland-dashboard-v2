@@ -18,6 +18,7 @@ export interface CreateProductDTO {
 }
 
 export interface ProductResponseDTO {
+  total: number
   pages: number
   products: Product[]
 }

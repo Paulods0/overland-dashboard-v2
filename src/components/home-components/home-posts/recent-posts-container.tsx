@@ -1,11 +1,12 @@
 import { Plus } from "lucide-react"
-import LinkButton from "../../ui/button/link-button"
 import RecentPost from "./recent-post"
-import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import Loading from "@/components/global/loading"
+import LinkButton from "../../ui/button/link-button"
+import NothingToShow from "@/components/global/nothing-to-show"
+import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 
 const RecentPostsContainer = () => {
-  const { data, isLoading } = useGetAllPosts("","","12100")
+  const { data, isLoading } = useGetAllPosts("", "", "4")
 
   if (isLoading) {
     return (
@@ -35,9 +36,13 @@ const RecentPostsContainer = () => {
       </div>
 
       <ul className="flex flex-col gap-2 h-[35vh] w-full overflow-auto lg:pr-2">
-        {data?.posts.map((post, index) => (
-          <RecentPost key={index} post={post} />
-        ))}
+        {!data?.posts ? (
+          <NothingToShow name="post" />
+        ) : (
+          data?.posts.map((post, index) => (
+            <RecentPost key={index} post={post} />
+          ))
+        )}
       </ul>
     </div>
   )

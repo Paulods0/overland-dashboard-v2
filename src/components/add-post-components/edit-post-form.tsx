@@ -19,8 +19,6 @@ export type Props = {
   content: string
 }
 
-export const AUTHOR_ID = "66b50327c6794b27ee46c6f1"
-
 export const categories = [
   { value: "Reviews", label: "Reviews" },
   { value: "Passeios", label: "Passeios" },
@@ -45,6 +43,7 @@ const EdittPostForm = ({ post, content }: Props) => {
     date: post.date,
     content: content,
     title: post.title,
+    tag: post.tag.join(","),
     category: post.category,
     author_id: post.author._id,
     highlighted: post.highlighted,
@@ -76,7 +75,7 @@ const EdittPostForm = ({ post, content }: Props) => {
         content: content,
         mainImage: postImg,
         date: updatePost.date,
-        tags: updatePost?.tags,
+        tag: updatePost?.tag,
         title: updatePost.title,
         latitude: updatePost.latitude,
         category: updatePost.category,
@@ -155,10 +154,11 @@ const EdittPostForm = ({ post, content }: Props) => {
           <Input.Label title="Tags (opcional e separar por vírgula)" />
           <Input.Field
             type="text"
-            value={updatePost.tags}
-            onChange={(e) =>
-              setUpdatePost({ ...updatePost, tags: e.target.value })
-            }
+            value={updatePost.tag}
+            onChange={(e) => {
+              const newTags = e.target.value.split(",")
+              setUpdatePost({ ...updatePost, tag: newTags })
+            }}
           />
         </Input.Root>
 

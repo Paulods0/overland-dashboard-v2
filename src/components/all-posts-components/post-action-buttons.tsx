@@ -66,15 +66,15 @@ const PostActionButtons = ({
 
         <div className="flex gap-2">
           <LinkButton
-            href={`/post/${postId}`}
             icon={Edit3}
-            className="w-fit bg-white h-8 text-black"
+            href={`/post/${postId}`}
+            className="w-fit bg-white text-black"
           />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 icon={Trash2}
-                className="bg-red-700 border-none text-white h-8"
+                className="bg-red-700 border-none text-white"
               />
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-baseColor">

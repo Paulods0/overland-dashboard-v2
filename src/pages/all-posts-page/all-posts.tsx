@@ -10,17 +10,19 @@ import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import FilterContainer from "@/components/all-posts-components/filter-container"
 
 const AllPosts = () => {
-  const [search, setSearch] = useSearchParams({page: "1",category: "",limit: ""})
+  const [search, setSearch] = useSearchParams({
+    page: "1",
+    category: "",
+    limit: "",
+  })
 
   const currentPage = search.get("page") || "1"
   const category = search.get("category") || ""
   const limit = search.get("limit") || "2"
 
   const { data, isLoading } = useGetAllPosts(currentPage, category, limit)
-  console.log(data)
 
   if (isLoading) return <LoadingData />
-  if (!data?.posts) return <NothingToShow name="post" />
 
   return (
     <main>
@@ -36,13 +38,18 @@ const AllPosts = () => {
             />
           </div>
 
-          <div className="w-full h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 place-items-center">
-            {data?.posts?.map((post) => (
-              <PostCard key={post._id} post={post} />
-            ))}
-          </div>
+          {!data?.posts ? (
+            <NothingToShow name="post" />
+          ) : (
+            <div className="w-full h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 place-items-center">
+              {data?.posts?.map((post) => (
+                <PostCard key={post._id} post={post} />
+              ))}
+            </div>
+          )}
+
           <Pagination
-            pages={data!.pages}
+            pages={data?.pages}
             setSearch={setSearch}
             currentPage={Number(currentPage)}
           />

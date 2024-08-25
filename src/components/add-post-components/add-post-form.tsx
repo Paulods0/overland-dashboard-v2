@@ -31,7 +31,7 @@ const AddPostForm = ({ content }: FormProps) => {
   const [post, setPost] = useState<CreatePostDTO>({
     content,
     date: "",
-    tags: "",
+    tag: "",
     title: "",
     category: "",
     latitude: "",
@@ -50,7 +50,6 @@ const AddPostForm = ({ content }: FormProps) => {
       setPost({ ...post, mainImage: image })
     }
   }
-  console.log(post)
 
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -88,7 +87,7 @@ const AddPostForm = ({ content }: FormProps) => {
       const data: CreatePostDTO = {
         latitude: lat,
         longitude: long,
-        tags: post.tags,
+        tag: post.tag,
         date: post.date,
         content: content,
         title: post.title,
@@ -114,7 +113,7 @@ const AddPostForm = ({ content }: FormProps) => {
     setCoordinates(undefined)
     setPreviewImg(null)
     setPost({
-      tags: "",
+      tag: "",
       date: "",
       title: "",
       content: "",
@@ -185,10 +184,10 @@ const AddPostForm = ({ content }: FormProps) => {
           <Input.Label title="Tags (opcional e separar por vírgula)" />
           <Input.Field
             type="text"
-            value={post.tags}
+            value={post.tag}
             onChange={(e) => {
-              const tags = e.target.value.split(",")
-              setPost({ ...post, tags })
+              const tag = e.target.value.split(",")
+              setPost({ ...post, tag })
             }}
           />
         </Input.Root>

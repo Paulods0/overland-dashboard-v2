@@ -33,7 +33,7 @@ export interface CreatePostDTO {
   author_id: string
   highlighted: boolean
   author_notes?: string
-  tags?: string | string[]
+  tag?: string | string[]
   mainImage: string | File | null
 }
 
@@ -48,6 +48,6 @@ export interface UpdatePostDTO {
   author_id?: string
   highlighted?: boolean
   author_notes?: string
-  tags?: string | string[]
+  tag?: string | string[]
   mainImage?: string | File | null
 }
