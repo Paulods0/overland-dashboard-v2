@@ -1,7 +1,7 @@
 import Box from "../global/box"
 import { Post } from "@/api/post/post.types"
-import PostActionButtons from "./post-action-buttons"
 import { formatDate } from "@/utils/date-fns"
+import PostActionButtons from "./post-action-buttons"
 
 type Props = {
   post: Post

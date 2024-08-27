@@ -94,7 +94,7 @@ const Pagination = ({ pages, currentPage, setSearch }: Props) => {
   )
 
   return (
-    <div className="w-full px-4 lg:px-0 mx-auto justify-center py-8 flex items-center gap-2 lg:w-[90vw]">
+    <div className="w-full px-4 lg:px-0 mx-auto justify-center py-8 flex items-center gap-2 lg:w-[50vw]">
       <Button onClick={controls.goToStart} icon={ChevronsLeft} />
       <Button onClick={controls.prevPage} icon={ChevronLeft} />
       {slicedPages.map((page) => (

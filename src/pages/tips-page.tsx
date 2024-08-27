@@ -18,26 +18,18 @@ const TipsPage = () => {
   if (!data?.posts) return <NothingToShow name="dica" />
 
   return (
-    <main>
-      <Container>
-        <section className="flex flex-col gap-2 w-full">
-          <div className="w-full flex items-center justify-end">
-            <LinkButton href="/novo/dica" label="Adicionar" icon={Plus} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4 h-[60vh] overflow-y-auto">
-            {data?.posts.map((tip, index) => (
-              <TipCard key={index} tip={tip} />
-            ))}
-          </div>
+    <Container className="flex flex-col gap-2 w-full py-4">
+      <div className="w-full flex items-center justify-end">
+        <LinkButton href="/novo/dica" label="Adicionar" icon={Plus} className="bg-white text-black"/>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4 h-[60vh] overflow-y-auto">
+        {data?.posts.map((tip, index) => (
+          <TipCard key={index} tip={tip} />
+        ))}
+      </div>
 
-          <Pagination
-            currentPage={1}
-            pages={data!.pages}
-            setSearch={setSearch}
-          />
-        </section>
-      </Container>
-    </main>
+      <Pagination currentPage={1} pages={data!.pages} setSearch={setSearch} />
+    </Container>
   )
 }
 

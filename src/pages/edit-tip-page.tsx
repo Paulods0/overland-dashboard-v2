@@ -19,17 +19,13 @@ const EditTipPage = () => {
   }
 
   return (
-    <main>
-      <Container>
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4">
-          <TextEditor
-            content={content}
-            setContent={(newContent: string) => handleContent(newContent)}
-          />
-          <EditTipForm tip={data} content={content} />
-        </section>
-      </Container>
-    </main>
+    <Container className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4 py-6">
+      <TextEditor
+        content={content}
+        setContent={(newContent: string) => handleContent(newContent)}
+      />
+      <EditTipForm tip={data} content={content} />
+    </Container>
   )
 }
 

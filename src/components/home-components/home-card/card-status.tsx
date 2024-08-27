@@ -1,8 +1,10 @@
 import { ElementType } from "react"
+import { twMerge } from "tailwind-merge"
 import { PostResponse } from "@/api/post"
-import { useNavigate } from "react-router-dom"
+import { Navigation } from "lucide-react"
 import { UserResponseDTO } from "@/api/users/user.type"
 import LoadingData from "@/components/global/loading-data"
+import LinkButton from "@/components/ui/button/link-button"
 import { ProductResponseDTO } from "@/api/product/product.types"
 
 type Props = {
@@ -10,38 +12,47 @@ type Props = {
   title: string
   color: string
   icon: ElementType
+  className?: string
   isLoading: boolean
   data?: ProductResponseDTO | PostResponse | UserResponseDTO
 }
 
 const CardStatus = ({
   link,
-  icon: Icon,
-  color,
   title,
   data,
   isLoading,
+  icon: Icon,
+  className,
 }: Props) => {
-  const navigate = useNavigate()
   if (isLoading) return <LoadingData />
-
-  function handleNavigate() {
-    navigate(link)
-  }
 
   return (
     <div
-      onClick={handleNavigate}
-      className={`w-full cursor-pointer h-52 ${color} rounded-lg flex flex-col p-4 transition-all ease-in-out duration-200 hover:scale-[0.99]`}
+      className={twMerge(
+        `w-full h-52 text-baseColor bg-blackAndLight border rounded-lg items-center flex flex-col p-4 transition-all ease-in-out duration-200 hover:scale-[1.03]`,
+        className
+      )}
     >
-      <h3 className="text-lg text-white tracking-wider py-1">
-        Total de {title}
-      </h3>
-      <div className="w-full h-full flex bg-black/10 rounded-lg items-center justify-center">
-        <span className="font-bold text-white text-3xl md:text-5xl italic flex items-center gap-2">
-          <Icon className="font-normal" size={24} />
-          {data?.total}
-        </span>
+      <div className="flex w-full items-start justify-between gap-2">
+        <div className="flex flex-col">
+          <h4 className="text-sm font-light capitalize">Total de {title}</h4>
+          <div className="flex items-end gap-2">
+            <span className="text-3xl">{data?.total}</span>
+            <span className="italic">{title}</span>
+          </div>
+        </div>
+
+        <LinkButton
+          href={link}
+          icon={Navigation}
+          className="hover:bg-zinc-800 transition-all duration-200 ease-in-out w-fit"
+        />
+      </div>
+      <div
+        className={`h-full bg-blackAndLight w-full flex items-center justify-center rounded-xl`}
+      >
+        <Icon />
       </div>
     </div>
   )

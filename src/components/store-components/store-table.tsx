@@ -42,7 +42,7 @@ const StoreTable = ({ products }: Props) => {
   }
 
   return (
-    <Box className="h-[60vh] overflow-y-auto">
+    <Box className="h-[60vh] overflow-y-auto w-full">
       <Table>
         <TableHeader>
           <TableRow>

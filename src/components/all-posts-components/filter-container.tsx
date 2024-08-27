@@ -15,7 +15,7 @@ const FilterContainer = ({ setSearch }: Props) => {
   }
 
   return (
-    <div className="flex items-center w-full gap-4 flex-wrap">
+    <div className="flex items-center gap-4 flex-wrap">
       <PostFilter handleCategory={handleCategory} />
       <LinkButton
         label="Agenda AO"

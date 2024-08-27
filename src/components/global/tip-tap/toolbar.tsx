@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 //@ts-ignore
 import ToolbarButton from "./toolbar-button"
+import { uploadToFirebase } from "@/lib/firebase"
 
 type Props = {
   editor: Editor | null
@@ -23,23 +24,18 @@ type Props = {
 const Toolbar = ({ editor }: Props) => {
   if (!editor) return null
 
-  function addImage() {
+  const addImage = async () => {
     const input = document.createElement("input")
     input.type = "file"
     input.accept = "image/*"
 
-    input.onchange = (event: Event) => {
+    input.onchange = async (event: Event) => {
       const target = event.target as HTMLInputElement
       const file = target.files?.[0]
 
       if (file) {
-        const reader = new FileReader()
-
-        reader.onload = () => {
-          const url = reader.result as string
-          editor!.chain().focus().setImage({ src: url }).run()
-        }
-        reader.readAsDataURL(file)
+        const downloadURL = await uploadToFirebase(file, "posts-content")        
+        editor!.chain().focus().setImage({ src: downloadURL }).run()
       }
     }
     input.click()
@@ -52,8 +48,8 @@ const Toolbar = ({ editor }: Props) => {
   }
 
   return (
-    <div className="px-4 py-3 rounded-lg flex justify-between items-start gap-5 flex-wrap border border-zinc-600/60">
-      <div className="flex justify-start items-center gap-5 w-full lg:w-10/12 flex-wrap">
+    <div className="px-4 py-2 rounded-lg w-full border">
+      <div className="flex justify-start gap-4 w-full flex-wrap">
         <ToolbarButton
           icon={Bold}
           isActive={editor.isActive("bold")}

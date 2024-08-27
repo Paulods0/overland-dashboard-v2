@@ -1,6 +1,8 @@
-import { Menu } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { MenuIcon } from "lucide-react"
 import MobileMenu from "./mobile-menu"
+import { AnimatePresence } from "framer-motion"
+import Button from "@/components/ui/button/button"
 import { useTheme } from "../../../../context/theme-context"
 
 const MobileMenuButton = () => {
@@ -14,19 +16,24 @@ const MobileMenuButton = () => {
     setIsMenuOpen((prev) => !prev)
   }
 
-  isMenuOpen
-    ? (document.body.style.overflowY = "hidden")
-    : (document.body.style.overflowY = "auto")
+  useEffect(() => {
+    document.body.style.overflowY = isMenuOpen ? "hidden" : "auto"
+
+    return () => {
+      document.body.style.overflowY = "auto"
+    }
+  }, [isMenuOpen])
 
   return (
     <>
-      <button
+      <Button
+        icon={MenuIcon}
         onClick={handleOpenMenu}
-        className={`${bgAndTextColorBasedOnTheme} size-10 lg:hidden rounded-lg flex items-center justify-center`}
-      >
-        <Menu />
-      </button>
-      {isMenuOpen && <MobileMenu handleOpenMenu={handleOpenMenu} />}
+        className={`${bgAndTextColorBasedOnTheme} rounded-full`}
+      />
+      <AnimatePresence mode="wait">
+        {isMenuOpen && <MobileMenu handleOpenMenu={handleOpenMenu} />}
+      </AnimatePresence>
     </>
   )
 }

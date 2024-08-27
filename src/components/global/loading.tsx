@@ -1,14 +1,18 @@
+import { useTheme } from "@/context/theme-context"
 import { Oval } from "react-loader-spinner"
 
 const Loading = ({ size = 16 }: { size?: number }) => {
+  const { theme } = useTheme()
+  const color = theme === "light" ? "#111111" : "#fafafa"
   return (
     <Oval
       visible
       width={size}
       height={size}
-      color="#6B04B6"
-      secondaryColor="#6B04B6"
+      color={color}
+      secondaryColor={color}
     />
+    
   )
 }
 

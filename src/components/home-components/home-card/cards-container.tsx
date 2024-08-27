@@ -10,10 +10,13 @@ import { ShoppingCart } from "lucide-react"
 const CardsContainer = () => {
   const { isLoading: isLoadingUsers, data: users } = useGetUsers("", "1")
   const { isLoading: isLoadingPosts, data: posts } = useGetAllPosts("", "", "1")
-  const { isLoading: isLoadingProducts, data: products } = useGetProducts("","")
+  const { isLoading: isLoadingProducts, data: products } = useGetProducts(
+    "",
+    ""
+  )
 
   return (
-    <div className="flex w-full md:col-span-2 items-center flex-wrap md:flex-nowrap lg:justify-end gap-2">
+    <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-2 w-full lg:flex-[2]">
       <CardStatus
         data={posts}
         link="/posts"
@@ -21,6 +24,7 @@ const CardsContainer = () => {
         icon={ScrollText}
         color="bg-red-600"
         isLoading={isLoadingPosts}
+        className="h-full w-full rounded-3xl p-4"
       />
       <CardStatus
         icon={Users}
@@ -29,7 +33,9 @@ const CardsContainer = () => {
         title="Usuários"
         color="bg-indigo-600"
         isLoading={isLoadingUsers}
+        className="h-full w-full lg:row-span-2 rounded-3xl p-4"
       />
+
       <CardStatus
         link="/loja"
         data={products}
@@ -37,6 +43,7 @@ const CardsContainer = () => {
         color="bg-neutral-800"
         title="Artigos na loja"
         isLoading={isLoadingProducts}
+        className="h-full w-full rounded-3xl p-4"
       />
     </div>
   )

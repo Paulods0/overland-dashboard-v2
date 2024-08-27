@@ -26,11 +26,12 @@ const TipTapEditor = ({ setContent }: Props) => {
           levels: [1, 2, 3],
         },
       }),
-      Image,
-      Youtube.configure({
-        width: 300,
-        height: 300,
+      Image.configure({
         inline: true,
+      }),
+      Youtube.configure({
+        width: 100,
+        height: 100,
         autoplay: false,
         allowFullscreen: true,
       }),
@@ -41,13 +42,20 @@ const TipTapEditor = ({ setContent }: Props) => {
         class: "h-full outline-none p-4",
       },
     },
+
     onUpdate: ({ editor }) => {
       handleContent(editor.getHTML())
     },
   })
 
+  // useEffect(() => {
+  //   if (editor && postContent) {
+  //     editor.commands.setContent(postContent)
+  //   }
+  // }, [editor, postContent])
+
   return (
-    <div className="col-span-2 h-full flex gap-2 flex-col overflow-auto">
+    <div className="col-span-2 h-full w-full flex gap-2 flex-col overflow-auto">
       <ToolBar editor={editor} />
       <EditorContent
         editor={editor}

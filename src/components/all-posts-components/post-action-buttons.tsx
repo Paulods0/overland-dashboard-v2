@@ -74,7 +74,8 @@ const PostActionButtons = ({
             <AlertDialogTrigger asChild>
               <Button
                 icon={Trash2}
-                className="bg-red-700 border-none text-white"
+                buttonType="danger"
+                className="border-none text-white rounded-full"
               />
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-baseColor">

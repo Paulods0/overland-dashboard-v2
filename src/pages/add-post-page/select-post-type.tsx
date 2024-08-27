@@ -6,7 +6,7 @@ const SelectPostType = () => {
       <h1 className="text-2xl lg:text-3xl mt-[10vh] font-semibold">
         Selecione o tipo de publicação
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full md:size-[40vh] place-items-center gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full place-items-center gap-8">
         <SelectPostTypeButton
           img={"/icons/post.png"}
           label="Normal"

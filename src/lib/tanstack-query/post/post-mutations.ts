@@ -1,5 +1,4 @@
 import { PostAPI } from "@/api/post"
-import { UpdatePostDTO } from "@/api/post/post.types"
 import { KEYS } from "@/utils/tanstack-query.enuns"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 

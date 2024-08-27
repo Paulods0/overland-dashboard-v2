@@ -9,11 +9,11 @@ const HighlightedCard = () => {
   if (!data) return <NothingToShow name="destaque" />
 
   return (
-    <div className="relative h-56 rounded-lg w-full lg:flex-1 bg-black/60">
+    <div className="relative h-full rounded-3xl w-full lg:flex-1">
       <img
         alt={data.title}
         src={data.mainImage}
-        className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+        className="absolute top-0 left-0 w-full h-full object-cover rounded-3xl"
       />
     </div>
   )

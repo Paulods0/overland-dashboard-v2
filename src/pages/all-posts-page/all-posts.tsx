@@ -25,37 +25,33 @@ const AllPosts = () => {
   if (isLoading) return <LoadingData />
 
   return (
-    <main>
-      <Container>
-        <section className="w-full flex gap-2 flex-col">
-          <div className="w-full flex items-center justify-between lg:flex-nowrap flex-wrap gap-4">
-            <FilterContainer setSearch={setSearch} />
-            <LinkButton
-              label="Adicionar"
-              href="/novo"
-              icon={Plus}
-              className="bg-white text-black"
-            />
-          </div>
+    <Container className="flex gap-2 flex-col py-4">
+      <div className="flex items-center w-full justify-between flex-wrap gap-4">
+        <FilterContainer setSearch={setSearch} />
+        <LinkButton
+          label="Adicionar"
+          href="/novo"
+          icon={Plus}
+          className="bg-white text-black w-fit"
+        />
+      </div>
 
-          {!data?.posts ? (
-            <NothingToShow name="post" />
-          ) : (
-            <div className="w-full h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 place-items-center">
-              {data?.posts?.map((post) => (
-                <PostCard key={post._id} post={post} />
-              ))}
-            </div>
-          )}
+      {!data?.posts ? (
+        <NothingToShow name="post" />
+      ) : (
+        <div className="h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-3 place-items-center w-full">
+          {data?.posts?.map((post) => (
+            <PostCard key={post._id} post={post} />
+          ))}
+        </div>
+      )}
 
-          <Pagination
-            pages={data?.pages}
-            setSearch={setSearch}
-            currentPage={Number(currentPage)}
-          />
-        </section>
-      </Container>
-    </main>
+      <Pagination
+        pages={data?.pages}
+        setSearch={setSearch}
+        currentPage={Number(currentPage)}
+      />
+    </Container>
   )
 }
 

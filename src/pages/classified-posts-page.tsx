@@ -1,5 +1,5 @@
 import Container from "@/components/global/container"
-import Pagination from "@/components/global/pagination"
+// import Pagination from "@/components/global/pagination"
 import { Select } from "@/components/ui/select-field"
 import ClassifiedPosts from "@/components/classified-post-components/classified-posts"
 
@@ -22,7 +22,7 @@ const ClassifiedPostPage = () => {
           </div>
 
           <ClassifiedPosts />
-          <Pagination />
+          {/* <Pagination /> */}
         </section>
       </Container>
     </main>

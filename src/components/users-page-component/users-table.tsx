@@ -16,14 +16,13 @@ type Props = {
 
 const UsersTable = ({ users }: Props) => {
   if (!users) return <Loading />
-  console.log(users)
 
   return (
     <Box className="h-[60vh] overflow-y-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[250px]">ID</TableHead>
+            <TableHead className="w-[200px]">ID</TableHead>
             <TableHead>Imagem</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>Sobrenome</TableHead>

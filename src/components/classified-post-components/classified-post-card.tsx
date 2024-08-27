@@ -24,7 +24,6 @@ const ClassifiedPostCard = () => {
           <AlertModal
             title="Tens a certeza que pretendes eliminar este documento?"
             actionBtn={<Button className="bg-red-700" label="Eliminar" />}
-            description="Esta acção não pode ser desfeita. Pretende continuar?"
             trigger={
               <Button
                 icon={Trash}
