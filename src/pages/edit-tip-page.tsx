@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Container from "@/components/global/container"
 import LoadingData from "@/components/global/loading-data"
@@ -12,11 +12,17 @@ const EditTipPage = () => {
 
   const [content, setContent] = useState("")
 
-  if (isLoading) return <LoadingData />
-
   function handleContent(newContent: string) {
     setContent(newContent)
   }
+
+  useEffect(() => {
+    if (data?.content && !isLoading) {
+      setContent(data.content)
+    }
+  }, [data, isLoading])
+
+  if (isLoading) return <LoadingData />
 
   return (
     <Container className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4 py-6">

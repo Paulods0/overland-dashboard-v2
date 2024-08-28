@@ -11,7 +11,6 @@ const EditPostPage = () => {
   const { data, isLoading } = useGetSinglePost(id!)
 
   const [content, setContent] = useState("")
-  console.log(content)
 
   useEffect(() => {
     if (data?.content && !isLoading) {

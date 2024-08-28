@@ -11,7 +11,7 @@ export interface CreateTipDTO {
 }
 
 export interface UpdateTipDTO {
-  _id: string
+  id: string
   title?: string
   author?: string
   content?: string

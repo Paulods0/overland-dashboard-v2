@@ -29,12 +29,12 @@ const EditTipForm = ({ tip, content }: Props) => {
   if (!tip) return <LoadingData />
 
   const [updateTip, setUpdateTip] = useState<UpdateTipDTO>({
-    _id: tip._id,
+    id: tip._id,
     content,
     tags: "",
-    author: "",
     title: tip.title,
     image: tip.image,
+    author: tip.author._id,
     category: tip.category,
     author_notes: tip.author_notes,
   })
@@ -53,7 +53,7 @@ const EditTipForm = ({ tip, content }: Props) => {
     toggleLoading(true)
 
     let newImageURL: string | undefined = tip?.image
-    
+
     try {
       if (updateTip.image instanceof File) {
         await deleteFromFirebase(tip?.image!, "tips")
@@ -62,7 +62,7 @@ const EditTipForm = ({ tip, content }: Props) => {
 
       const data: UpdateTipDTO = {
         content,
-        _id: tip!._id,
+        id: tip!._id,
         image: newImageURL,
         tags: updateTip.tags,
         title: updateTip.title,

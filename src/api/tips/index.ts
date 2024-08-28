@@ -17,7 +17,7 @@ export class TipAPI {
   }
 
   static async updateTip(data: UpdateTipDTO): Promise<void> {
-    await axios.put(`/tip/${data._id}`, data)
+    await axios.put(`/tip/${data.id}`, data)
   }
 
   static async deleteTip(id: string): Promise<void> {
