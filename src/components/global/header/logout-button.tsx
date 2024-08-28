@@ -1,18 +1,22 @@
 import { LogOut } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
 import Button from "@/components/ui/button/button"
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const LogoutButton = () => {
-  async function handleLogOut() {
-    localStorage.removeItem("user")
-    return <Navigate to={"/login"} />
+  const navigate = useNavigate()
+  const { logout } = useAuth()
+
+  function handleLogout() {
+    logout()
+    navigate("/login")
   }
 
   return (
     <Button
       icon={LogOut}
+      onClick={handleLogout}
       buttonType="danger"
-      onClick={handleLogOut}
       className="rounded-full"
     />
   )

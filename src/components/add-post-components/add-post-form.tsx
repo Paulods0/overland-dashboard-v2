@@ -13,6 +13,7 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { Select } from "../../components/ui/select-field"
 import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 import { useCreatePost } from "@/lib/tanstack-query/post/post-mutations"
+import { useAuth } from "@/context/auth-context"
 
 type FormProps = {
   content: string
@@ -21,6 +22,7 @@ type FormProps = {
 export const AUTHOR_ID = "66b50327c6794b27ee46c6f1"
 
 const AddPostForm = ({ content }: FormProps) => {
+  const { userId, user } = useAuth()
   const { mutate } = useCreatePost()
   const { data: users, isLoading: isLoadingUsers } = useGetUsers("", "100")
   const { isLoading, toggleLoading } = useIsLoading()
@@ -35,10 +37,10 @@ const AddPostForm = ({ content }: FormProps) => {
     title: "",
     category: "",
     latitude: "",
-    author_id: "",
     longitude: "",
     mainImage: "",
     author_notes: "",
+    author_id: userId!,
     highlighted: false,
   })
 
@@ -54,59 +56,53 @@ const AddPostForm = ({ content }: FormProps) => {
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     toggleLoading(true)
-    console.log(post)
-    try {
-      if (
-        !post.title ||
-        !post.mainImage ||
-        !post.category ||
-        !post.author_id ||
-        !post.date
-      ) {
-        toast.error("Por favor preencha todos os campos obrigatórios")
-        toggleLoading(false)
-        throw new Error("Form error, empty input")
-      }
 
-      if (post.category === "Passeios") {
-        if (!coordinates || !coordinates.includes(",")) {
-          toast.error(
-            "Por favor insira a latitude e a longitude separadas por vírgula."
-          )
-          toggleLoading(false)
-          return
-        }
-      }
-
-      const imageURL = await uploadToFirebase(post.mainImage as File, "posts")
-      const [lat, long] =
-        coordinates && coordinates.includes(",")
-          ? coordinates.split(",")
-          : [undefined, undefined]
-
-      const data: CreatePostDTO = {
-        latitude: lat,
-        longitude: long,
-        tag: post.tag,
-        date: post.date,
-        content: content,
-        title: post.title,
-        mainImage: imageURL,
-        category: post.category,
-        author_id: post.author_id,
-        highlighted: post.highlighted,
-        author_notes: post.author_notes,
-      }
-      console.log(data)
-
-      mutate(data)
+    if (
+      !post.title ||
+      !post.mainImage ||
+      !post.category ||
+      !post.author_id ||
+      !post.date
+    ) {
+      toast.error("Por favor preencha todos os campos obrigatórios")
       toggleLoading(false)
-      toast.success("Post adicinado com sucesso")
-      resetInputs()
-    } catch (error: any) {
-      console.log(error)
-      toast.error(error)
+      throw new Error("Form error, empty input")
     }
+
+    if (post.category === "Passeios") {
+      if (!coordinates || !coordinates.includes(",")) {
+        toast.error(
+          "Por favor insira a latitude e a longitude separadas por vírgula."
+        )
+        toggleLoading(false)
+        return
+      }
+    }
+
+    const imageURL = await uploadToFirebase(post.mainImage as File, "posts")
+    const [lat, long] =
+      coordinates && coordinates.includes(",")
+        ? coordinates.split(",")
+        : [undefined, undefined]
+
+    const data: CreatePostDTO = {
+      latitude: lat,
+      longitude: long,
+      tag: post.tag,
+      date: post.date,
+      content: content,
+      title: post.title,
+      mainImage: imageURL,
+      category: post.category,
+      author_id: post.author_id,
+      highlighted: post.highlighted,
+      author_notes: post.author_notes,
+    }
+    console.log(data)
+    mutate(data)
+    toggleLoading(false)
+    toast.success("Post adicinado com sucesso")
+    resetInputs()
   }
 
   function resetInputs() {
@@ -220,8 +216,13 @@ const AddPostForm = ({ content }: FormProps) => {
             <NothingToShow name="usuário" />
           ) : (
             <Select.Container
+              defaultValue={userId}
               onChange={(e) => setPost({ ...post, author_id: e.target.value })}
             >
+              <Select.Option
+                value={userId}
+                label={`${user?.firstname} ${user?.lastname}`}
+              />
               {users.users.map((user, index) => (
                 <Select.Option
                   key={index}

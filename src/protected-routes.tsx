@@ -4,10 +4,11 @@ import { Navigate, Outlet } from "react-router-dom"
 import SideBar from "./components/global/header/sidebar"
 import { Suspense } from "react"
 import Fallback from "./components/global/fallback"
+import { useAuth } from "./context/auth-context"
 
 const ProtectedRoutes = () => {
   const { isOnline } = useIsOnline()
-  const isLogged = localStorage.getItem("login")
+  const { token } = useAuth()
   const { theme } = useTheme()
 
   if (!isOnline)
@@ -24,8 +25,8 @@ const ProtectedRoutes = () => {
       </div>
     )
 
-  if (!isLogged) {
-    return <Navigate to="/login" />
+  if (!token) {
+    return <Navigate to="/login" replace />
   }
 
   return (

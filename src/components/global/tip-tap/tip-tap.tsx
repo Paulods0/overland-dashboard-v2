@@ -1,19 +1,20 @@
 import "./tip-tap.style.css"
 
 import ToolBar from "./toolbar"
+import Iframe from "./extensions"
+import { useEffect } from "react"
 import Image from "@tiptap/extension-image"
 import Youtube from "@tiptap/extension-youtube"
 import StarterKit from "@tiptap/starter-kit"
 import Underline from "@tiptap/extension-underline"
 import { useEditor, EditorContent } from "@tiptap/react"
-import Iframe from "./extensions"
 
 type Props = {
   content?: string
   setContent: (newCont: string) => void
 }
 
-const TipTapEditor = ({ setContent }: Props) => {
+const TipTapEditor = ({ content, setContent }: Props) => {
   function handleContent(newContent: string) {
     setContent(newContent)
   }
@@ -42,17 +43,17 @@ const TipTapEditor = ({ setContent }: Props) => {
         class: "h-full outline-none p-4",
       },
     },
-
+    content: content,
     onUpdate: ({ editor }) => {
       handleContent(editor.getHTML())
     },
   })
 
-  // useEffect(() => {
-  //   if (editor && postContent) {
-  //     editor.commands.setContent(postContent)
-  //   }
-  // }, [editor, postContent])
+  useEffect(() => {
+    if (editor && content) {
+      editor.commands.setContent(content)
+    }
+  }, [editor, content])
 
   return (
     <div className="col-span-2 h-full w-full flex gap-2 flex-col overflow-auto">
