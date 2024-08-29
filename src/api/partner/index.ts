@@ -25,7 +25,7 @@ export class PartnerAPI {
   }
 
   static async updatePartner(data: UpdatePartnerDTO) {
-    await axios.put(`/partner/${data.id}`, data)
+    await axios.put(`/partner/${data._id}`, data)
   }
 
   static async deletePartner(id: string) {

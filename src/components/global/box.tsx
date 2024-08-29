@@ -9,7 +9,7 @@ const Box = ({ children, className }: Props) => {
   return (
     <div
       className={twMerge(
-        "rounded-lg border border-neutral-600/60 w-auto p-4",
+        "rounded-lg border border-neutral-600/60 p-4",
         className
       )}
     >

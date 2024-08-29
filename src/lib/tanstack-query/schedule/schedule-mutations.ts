@@ -19,7 +19,9 @@ export const useUpdateSchedule = () => {
     mutationKey: [KEYS.UPDATE_SCHEDULE],
     mutationFn: SchedulePostAPI.updateSchedule,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: [KEYS.GET_SCHEDULES] }),
+      queryClient.invalidateQueries({
+        queryKey: [KEYS.GET_SCHEDULES, KEYS.GET_SINGLE_SCHEDULE],
+      }),
   })
 }
 

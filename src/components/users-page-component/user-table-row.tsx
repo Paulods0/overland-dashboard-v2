@@ -31,7 +31,6 @@ const UserTableRow = ({ user }: Props) => {
 
   return (
     <TableRow>
-      <TableCell>{user._id}</TableCell>
       <TableCell>
         <img
           src={user.image ? user.image : "/icons/user.png"}

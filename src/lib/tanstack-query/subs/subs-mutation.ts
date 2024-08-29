@@ -20,7 +20,9 @@ export const useUpdateSub = () => {
     mutationKey: [KEYS.UPDATE_SUBS],
     mutationFn: SubscriberAPI.updateSubscriber,
     onSuccess: () =>
-      queryCliet.invalidateQueries({ queryKey: [KEYS.GET_SUBS] }),
+      queryCliet.invalidateQueries({
+        queryKey: [KEYS.GET_SUBS, KEYS.GET_SINGLE_SUB],
+      }),
   })
 }
 

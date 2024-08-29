@@ -3,7 +3,7 @@ import { toast } from "react-toastify"
 import Button from "../ui/button/button"
 import { Input } from "../ui/input-field"
 import { DialogClose } from "../ui/dialog"
-import { deleteFromFirebase } from "@/lib/firebase"
+// import { deleteFromFirebase } from "@/lib/firebase"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { Product, UpdateProductDTO } from "@/api/product/product.types"
@@ -21,7 +21,7 @@ const EditProductForm = ({ data }: Props) => {
   const { mutate } = useUpdateProduct()
   const { isLoading, toggleLoading } = useIsLoading()
 
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [_, setPreviewImage] = useState<string | null>(null)
   const [product, setProduct] = useState<UpdateProductDTO>({
     id: data._id,
     name: data.name,
@@ -44,12 +44,8 @@ const EditProductForm = ({ data }: Props) => {
     e.preventDefault()
     toggleLoading(true)
     try {
-      let newImage: string | undefined = data.image
+      let newImage: string | null = data.image
 
-      if (previewImage) {
-        await deleteFromFirebase(data.image, "products")
-        newImage = product.image
-      }
       const updatedData: UpdateProductDTO = { ...product, image: newImage }
       mutate(updatedData)
 

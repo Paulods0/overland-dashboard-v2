@@ -1,4 +1,5 @@
 export type SchedulePost = {
+  id: string
   file: string
   title: string
   author: string
@@ -12,7 +13,7 @@ export interface CreateScheduleDTO {
 
 export interface UpdateScheduleDTO {
   id: string
-  file?: string
+  file?: string | File
   title?: string
   author?: string
 }

@@ -1,6 +1,6 @@
 import Box from "@/components/global/box"
 import { Edit3, Trash } from "lucide-react"
-import Modal from "@/components/global/modal"
+import LinkButton from "../ui/button/link-button"
 import Button from "@/components/ui/button/button"
 import { Partner } from "@/api/partner/partner.type"
 import AlertModal from "@/components/global/alert-modal"
@@ -26,13 +26,7 @@ const PartnerCard = ({ partner }: Props) => {
         <div className="flex flex-col items-end w-full">
           <h4 className="italic text-xs">{partner.date}</h4>
           <div className="flex items-center gap-2">
-            <Modal
-              trigger={<Button icon={Edit3} buttonType="base" />}
-              title=""
-              description=""
-            >
-              Algum formulário aqui.
-            </Modal>
+            <LinkButton icon={Edit3} href={`/parceiro/${partner._id}`} className="bg-white text-black"/>
             <AlertModal
               trigger={<Button icon={Trash} buttonType="danger" />}
               actionBtn={<Button buttonType="danger" label="Remover" />}

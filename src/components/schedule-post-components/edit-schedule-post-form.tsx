@@ -3,30 +3,47 @@ import { toast } from "react-toastify"
 import Button from "../ui/button/button"
 import { Input } from "../ui/input-field"
 import { DialogClose } from "../ui/dialog"
+import useIsLoading from "@/hooks/useIsLoading"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
+import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
+import { SchedulePost, UpdateScheduleDTO } from "@/api/schedule/schedule.types"
+import { useUpdateSchedule } from "@/lib/tanstack-query/schedule/schedule-mutations"
 
-type EditScheduleProps = {
-  title?: string
-  document?: File | null | string
+type Props = {
+  data: SchedulePost
 }
 
-const EditSchedulePostForm = () => {
-  const [schedule, setSchedule] = useState<EditScheduleProps>({
-    title: "",
-    document: "",
+const EditSchedulePostForm = ({ data }: Props) => {
+  const { mutate } = useUpdateSchedule()
+  const { isLoading, toggleLoading } = useIsLoading()
+  const [pdfFilePreview, setPdfFilePreview] = useState<File | null>(null)
+  const [schedule, setSchedule] = useState<UpdateScheduleDTO>({
+    id: data.id,
+    file: data.file,
+    title: data.title,
+    author: data.author,
   })
 
-  function handleDocument(e: ChangeEvent<HTMLInputElement>) {
+  function handlefile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
-      setSchedule({ ...schedule, document: e.target.files[0] })
+      setPdfFilePreview(e.target.files[0])
+      setSchedule({ ...schedule, file: e.target.files[0] })
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    toggleLoading(true)
+    let currPdfDocument = schedule.file
+    if (pdfFilePreview) {
+      await deleteFromFirebase(schedule.file as string, "schedule-posts")
+      currPdfDocument = await uploadToFirebase(pdfFilePreview, "schedule-posts")
+    }
 
-    const data = { ...schedule }
+    const data: UpdateScheduleDTO = { ...schedule, file: currPdfDocument }
+    mutate(data)
+    toggleLoading(true)
     toast.success("Os dados foram atualizados com sucesso")
     console.log(data)
   }
@@ -35,7 +52,7 @@ const EditSchedulePostForm = () => {
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
       <Input.Root>
         <Input.Label title="Documento em PDF" />
-        <Input.Field type="file" accept=".pdf" onChange={handleDocument} />
+        <Input.Field type="file" accept=".pdf" onChange={handlefile} />
       </Input.Root>
 
       <Input.Root>
@@ -51,10 +68,12 @@ const EditSchedulePostForm = () => {
         <DialogClose asChild>
           <Button buttonType="cancel" label="Cancelar" />
         </DialogClose>
+
         <FormButton
-          label="Salvar alterações"
           icon={Save}
+          disabled={isLoading}
           className="bg-indigo-700 text-white lg:self-end"
+          label={isLoading ? "Salvando..." : "Salvar alterações"}
         />
       </div>
     </form>

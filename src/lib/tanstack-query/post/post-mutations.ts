@@ -19,7 +19,9 @@ export const useUpdatePost = () => {
     mutationKey: [KEYS.UPDATE_POST],
     mutationFn: PostAPI.updatePost,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: [KEYS.GET_POSTS] }),
+      queryClient.invalidateQueries({
+        queryKey: [KEYS.GET_POSTS, KEYS.GET_SINGLE_POST],
+      }),
   })
 }
 

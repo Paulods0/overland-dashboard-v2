@@ -1,15 +1,16 @@
 import Box from "../global/box"
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
+import Loading from "../global/loading"
 import { Input } from "../ui/input-field"
 import { Select } from "../ui/select-field"
+import { uploadToFirebase } from "@/lib/firebase"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { CreatePartnerDTO } from "@/api/partner/partner.type"
 import { AUTHOR_ID } from "../add-post-components/add-post-form"
+import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 import { useCreatePartner } from "@/lib/tanstack-query/partner/partner-mutations"
-import { uploadToFirebase } from "@/lib/firebase"
-import Loading from "../global/loading"
 
 type PartnerProps = {
   content: string
@@ -17,6 +18,7 @@ type PartnerProps = {
 
 const AddPartnerForm = ({ content }: PartnerProps) => {
   const { mutate, isPending } = useCreatePartner()
+  const { data: users } = useGetUsers("", "100")
 
   const [partner, setPartner] = useState<CreatePartnerDTO>({
     date: "",
@@ -24,7 +26,6 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
     title: "",
     image: "",
     content: "",
-    category: "",
     author_notes: "",
     author: AUTHOR_ID,
   })
@@ -66,14 +67,13 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
         tags: tagArr,
         image: downloadURL,
         date: partner.date,
-        category: "partner",
         title: partner.title,
         author: partner.author,
         author_notes: partner.author_notes,
       }
 
-      mutate(data)
       console.log(data)
+      mutate(data)
       toast.success("Publicado com sucesso")
     } catch (error) {
       console.log(error)
@@ -90,7 +90,7 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
           icon={isPending ? Loading : Save}
           className="w-full bg-indigo-700 text-white border-none self-end"
         />
-        
+
         <Input.Root>
           <Input.Label title="Título*" />
           <Input.Field
@@ -143,13 +143,20 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
         </Input.Root>
 
         <Select.Root>
-          <Select.Label label="Autor" />
+          <Select.Label label="Autor*" />
           <Select.Container
-            defaultValue={partner.author}
+            defaultValue={"none"}
             onChange={(e) => setPartner({ ...partner, author: e.target.value })}
           >
-            <Select.Option value="user-1" label="User 1" />
-            <Select.Option value="user-2" label="User 2" />
+            <Select.Option disabled value="none" label="Autor" />
+
+            {users?.users.map((user, index) => (
+              <Select.Option
+                key={index}
+                value={user._id}
+                label={`${user.firstname} ${user.lastname}`}
+              />
+            ))}
           </Select.Container>
         </Select.Root>
       </form>

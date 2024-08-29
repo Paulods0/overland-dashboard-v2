@@ -18,7 +18,9 @@ export const useUpdateTip = () => {
     mutationKey: [KEYS.UPDATE_TIP],
     mutationFn: TipAPI.updateTip,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: [KEYS.GET_TIPS] }),
+      queryClient.invalidateQueries({
+        queryKey: [KEYS.GET_TIPS, KEYS.GET_SINGLE_TIP],
+      }),
   })
 }
 

@@ -18,11 +18,10 @@ const UsersTable = ({ users }: Props) => {
   if (!users) return <Loading />
 
   return (
-    <Box className="h-[60vh] overflow-y-auto">
+    <Box className="h-[60vh] overflow-y-auto w-full">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">ID</TableHead>
             <TableHead>Imagem</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>Sobrenome</TableHead>

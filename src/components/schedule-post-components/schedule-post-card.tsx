@@ -42,7 +42,7 @@ const SchedulePostCard = ({ schedule }: Props) => {
             description="Atualize os dados e corrige os erros"
             trigger={<Button icon={Edit} />}
           >
-            <EditSchedulePostForm />
+            <EditSchedulePostForm data={schedule}/>
           </Modal>
         </div>
       </div>

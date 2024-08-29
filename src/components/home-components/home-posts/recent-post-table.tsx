@@ -1,5 +1,3 @@
-import { Post } from "@/api/post/post.types"
-import { formatDate } from "@/utils/date-fns"
 import {
   Table,
   TableBody,
@@ -8,7 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import Button from "@/components/ui/button/button"
+import { Post } from "@/api/post/post.types"
+import { formatDate } from "@/utils/date-fns"
 
 type Props = {
   posts: Post[]
@@ -19,7 +18,6 @@ const RecentPostTable = ({ posts }: Props) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>ID</TableHead>
           <TableHead>Imagem</TableHead>
           <TableHead>Autor</TableHead>
           <TableHead>Em destaque</TableHead>
@@ -29,7 +27,6 @@ const RecentPostTable = ({ posts }: Props) => {
       <TableBody>
         {posts.map((post, index) => (
           <TableRow key={index}>
-            <TableCell>{post._id}</TableCell>
             <TableCell>
               <img
                 src={post.mainImage}
@@ -45,12 +42,6 @@ const RecentPostTable = ({ posts }: Props) => {
             </TableCell>
             <TableCell>{post.highlighted ? "Sim" : "Não"}</TableCell>
             <TableCell>{formatDate(post.date)}</TableCell>
-            <TableCell>
-              <Button
-                label="..."
-                className="rounded-full size-8 flex items-center justify-center"
-              />
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>

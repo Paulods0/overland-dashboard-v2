@@ -9,7 +9,7 @@ const ProductContainer = () => {
   if (isLoading) return <LoadingData />
   if (!data?.products) return <NothingToShow name="artigo" />
   return (
-    <div>
+    <div className="w-full">
       {!data?.products ? (
         <NothingToShow name="artigo" />
       ) : (

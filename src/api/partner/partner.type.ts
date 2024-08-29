@@ -1,9 +1,13 @@
+import { Author } from "../post/post.types"
+
 export type Partner = {
+  _id: string
   date: string
   image: string
   title: string
-  author: string
+  author: Author
   content: string
+  author_notes?: string
 }
 
 export interface CreatePartnerDTO {
@@ -11,19 +15,20 @@ export interface CreatePartnerDTO {
   title: string
   author: string
   content: string
-  category: string
   image: string | File
   author_notes?: string
   tags: string | string[]
 }
 
 export interface UpdatePartnerDTO {
-  id: string
-  image?: string
+  _id: string
+  date?: string
   title?: string
   author?: string
   content?: string
-  date?: string
+  image?: string | File
+  author_notes?: string
+  tags?: string | string[]
 }
 
 export interface PartnerResponseDTO {

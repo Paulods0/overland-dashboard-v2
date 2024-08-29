@@ -6,6 +6,7 @@ import { useGetProducts } from "@/lib/tanstack-query/product/product-queries"
 import { Users } from "lucide-react"
 import { ScrollText } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
+import LoadingData from "@/components/global/loading-data"
 
 const CardsContainer = () => {
   const { isLoading: isLoadingUsers, data: users } = useGetUsers("", "1")
@@ -15,6 +16,10 @@ const CardsContainer = () => {
     ""
   )
 
+  if (isLoadingUsers || isLoadingPosts || isLoadingProducts) {
+    return <LoadingData />
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-2 w-full lg:flex-[2]">
       <CardStatus
@@ -23,7 +28,6 @@ const CardsContainer = () => {
         title="Posts"
         icon={ScrollText}
         color="bg-red-600"
-        isLoading={isLoadingPosts}
         className="h-full w-full rounded-3xl p-4"
       />
       <CardStatus
@@ -32,7 +36,6 @@ const CardsContainer = () => {
         link="/usuários"
         title="Usuários"
         color="bg-indigo-600"
-        isLoading={isLoadingUsers}
         className="h-full w-full lg:row-span-2 rounded-3xl p-4"
       />
 
@@ -42,7 +45,6 @@ const CardsContainer = () => {
         icon={ShoppingCart}
         color="bg-neutral-800"
         title="Artigos na loja"
-        isLoading={isLoadingProducts}
         className="h-full w-full rounded-3xl p-4"
       />
     </div>

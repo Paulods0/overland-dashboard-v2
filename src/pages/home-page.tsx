@@ -18,24 +18,28 @@ const HomePage = () => {
 
         <RecentPosts />
         <div className="grid grid-cols-1 lg:h-[60vh] lg:grid-cols-3 rounded-xl gap-4">
-          <div className="col-span-2 rounded-2xl bg-blackAndLight border w-full flex flex-col lg:items-end gap-2 p-4">
-            <div className="flex items-center gap-2">
-              <LinkButton
-                href="#"
-                className="bg-white text-lightBlack"
-                icon={Plus}
-              />
-              <LinkButton
-                href="#"
-                className="bg-white text-lightBlack"
-                icon={Eye}
-              />
+          <div className="lg:col-span-2 rounded-2xl bg-blackAndLight border w-full flex flex-col lg:items-end gap-2 p-4">
+            <div className="w-full flex items-center justify-between mb-4">
+              <h1 className="text-xl font-semibold lg:font-normal lg:text-base ">
+                Produtos
+              </h1>
+              <div className="flex items-center lg:justify-normal justify-end gap-2">
+                <LinkButton
+                  href="#"
+                  icon={Plus}
+                  className="bg-white text-lightBlack lg:w-full w-fit"
+                />
+                <LinkButton
+                  href="#"
+                  icon={Eye}
+                  className="bg-white text-lightBlack lg:w-full w-fit"
+                />
+              </div>
             </div>
             <ProductContainer />
           </div>
           <UsersContainer />
         </div>
-        {/* <div className="w-full bg-indigo-600 h-[400vh]"></div> */}
       </Container>
     </main>
   )

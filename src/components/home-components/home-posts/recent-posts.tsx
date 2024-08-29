@@ -19,18 +19,20 @@ const RecentPosts = () => {
 
   return (
     <div className="lg:col-span-2 lg:p-4  flex flex-col gap-4 border rounded-2xl bg-blackAndLight p-4">
-      <div className="w-full lg:flex-row flex-col lg:gap-0 gap-6 flex items-center justify-between">
-        <h1>Últimos posts</h1>
-        <div className="flex flex-col lg:flex-row items-center gap-2 w-full lg:w-fit justify-end lg:justify-normal">
+      <div className="w-full lg:flex-row flex-col lg:gap-0 gap-6 flex  items-start lg:items-center justify-between">
+        <h1 className="font-semibold lg:font-normal text-xl lg:text-base">
+          Últimos posts
+        </h1>
+        <div className="flex flex-row items-end lg:items-center gap-2 w-full lg:w-fit justify-end lg:justify-normal">
           <LinkButton
             href="/novo"
             icon={Plus}
-            className="bg-white text-black"
+            className="bg-white text-black lg:w-full w-fit"
           />
           <LinkButton
             href="/posts"
             icon={EyeIcon}
-            className="bg-white text-black"
+            className="bg-white text-black lg:w-full w-fit"
           />
         </div>
       </div>

@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge"
 import { PostResponse } from "@/api/post"
 import { Navigation } from "lucide-react"
 import { UserResponseDTO } from "@/api/users/user.type"
-import LoadingData from "@/components/global/loading-data"
 import LinkButton from "@/components/ui/button/link-button"
 import { ProductResponseDTO } from "@/api/product/product.types"
 
@@ -13,20 +12,10 @@ type Props = {
   color: string
   icon: ElementType
   className?: string
-  isLoading: boolean
   data?: ProductResponseDTO | PostResponse | UserResponseDTO
 }
 
-const CardStatus = ({
-  link,
-  title,
-  data,
-  isLoading,
-  icon: Icon,
-  className,
-}: Props) => {
-  if (isLoading) return <LoadingData />
-
+const CardStatus = ({ link, title, data, icon: Icon, className }: Props) => {
   return (
     <div
       className={twMerge(

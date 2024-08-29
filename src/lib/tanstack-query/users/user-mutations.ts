@@ -8,7 +8,8 @@ export const useCreateUser = () => {
   return useMutation({
     mutationKey: [KEYS.CREATE_USER],
     mutationFn: UserAPI.createUser,
-    onSuccess: () => queryClient.invalidateQueries({queryKey:[KEYS.GET_USERS]})
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [KEYS.GET_USERS] }),
   })
 }
 
@@ -18,7 +19,10 @@ export const useUpdateUser = () => {
   return useMutation({
     mutationKey: [KEYS.UPDATED_USER],
     mutationFn: UserAPI.updateUser,
-    onSuccess: () => queryClient.invalidateQueries({queryKey:[KEYS.GET_USERS]})
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [KEYS.GET_USERS],
+      }),
   })
 }
 export const useDeleteUser = () => {
@@ -27,6 +31,7 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationKey: [KEYS.DELETE_USER],
     mutationFn: UserAPI.deleteUser,
-    onSuccess: () => queryClient.invalidateQueries({queryKey:[KEYS.GET_USERS]})
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [KEYS.GET_USERS] }),
   })
 }

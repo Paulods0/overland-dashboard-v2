@@ -18,7 +18,9 @@ export const useUpdateProduct = () => {
     mutationKey: [KEYS.UPDATE_PRODUCT],
     mutationFn: ProductAPI.updateProduct,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: [KEYS.GET_PRODUCTS] }),
+      queryClient.invalidateQueries({
+        queryKey: [KEYS.GET_PRODUCTS],
+      }),
   })
 }
 
