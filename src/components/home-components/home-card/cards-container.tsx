@@ -13,6 +13,7 @@ const CardsContainer = () => {
   const { isLoading: isLoadingPosts, data: posts } = useGetAllPosts("", "", "1")
   const { isLoading: isLoadingProducts, data: products } = useGetProducts(
     "",
+    "",
     ""
   )
 
