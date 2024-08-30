@@ -18,7 +18,7 @@ const AllPosts = () => {
 
   const currentPage = search.get("page") || "1"
   const category = search.get("category") || ""
-  const limit = search.get("limit") || "2"
+  const limit = search.get("limit") || "8"
 
   const { data, isLoading } = useGetAllPosts(currentPage, category, limit)
 
@@ -37,7 +37,7 @@ const AllPosts = () => {
       </div>
 
       {data && data?.posts.length > 0 ? (
-        <div className="h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-3 place-items-center w-full">
+        <div className="h-[50dvh] md:h-[60vh] py-2 overflow-y-auto grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 place-items-center w-full">
           {data?.posts?.map((post) => (
             <PostCard key={post._id} post={post} />
           ))}
