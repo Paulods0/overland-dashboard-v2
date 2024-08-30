@@ -9,7 +9,7 @@ type Props = {
 
 const PostCard = ({ post }: Props) => {
   const formatedDate = formatDate(post.date)
-  // const tags = post.tag.length > 0 && post.tag[0].trim()
+
   return (
     <Box className="relative border rounded-lg p-4 w-full flex flex-col gap-2">
       <img
@@ -21,13 +21,7 @@ const PostCard = ({ post }: Props) => {
         <h1 className="font-bold text-lg line-clamp-1">{post.title}</h1>
         <div className="w-full flex items-end justify-between">
           <p className="text-xs">{post.category}</p>
-
-          <div className="flex flex-col items-end">
-            <p className="italic text-xs">{formatedDate}</p>
-            <ul className="flex">
-              {/* {tags && <p className="italic text-xs">#{tags}</p>} */}
-            </ul>
-          </div>
+          <p className="italic text-xs">{formatedDate}</p>
         </div>
         <PostActionButtons
           postId={post._id}
