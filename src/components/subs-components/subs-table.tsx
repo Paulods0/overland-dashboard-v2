@@ -1,7 +1,3 @@
-import Modal from "../global/modal"
-import Box from "@/components/global/box"
-import { Edit, Trash } from "lucide-react"
-import AlertModal from "@/components/global/alert-modal"
 import {
   Table,
   TableHeader,
@@ -10,33 +6,35 @@ import {
   TableBody,
   TableHead,
 } from "@/components/ui/table"
+import Modal from "../global/modal"
+import { toast } from "react-toastify"
 import Button from "../ui/button/button"
+import Box from "@/components/global/box"
 import EditSubForm from "./edit-sub-form"
+import { Edit, Trash } from "lucide-react"
+import useIsLoading from "@/hooks/useIsLoading"
+import AlertModal from "@/components/global/alert-modal"
 import { Subscriber } from "@/api/subscriber/subscriber.types"
 import { useDeleteSub } from "@/lib/tanstack-query/subs/subs-mutation"
-import useIsLoading from "@/hooks/useIsLoading"
-import { toast } from "react-toastify"
 
 type Props = {
   subs: Subscriber[]
 }
 
 const SubsTable = ({ subs }: Props) => {
-  console.log(subs)
-
   const { isLoading, toggleLoading } = useIsLoading()
-  const { mutate } = useDeleteSub()
+  const { mutateAsync } = useDeleteSub()
 
   async function handleDeleteSub(id: string) {
-    toggleLoading(true)
     try {
-      mutate(id)
+      await mutateAsync(id)
       toggleLoading(false)
       toast.success("Removido com sucesso")
     } catch (error) {
-      toggleLoading(false)
       toast.error("Erro ao remover, tente novamente")
       console.error(error)
+    } finally {
+      toggleLoading(true)
     }
   }
 

@@ -15,18 +15,27 @@ const TipsPage = () => {
   const { data, isLoading } = useGetTips(currentPage)
 
   if (isLoading) return <LoadingData />
-  if (!data?.posts) return <NothingToShow name="dica" />
+  // if (!data?.posts) return <NothingToShow name="dica" />
 
   return (
     <Container className="flex flex-col gap-2 w-full py-4">
       <div className="w-full flex items-center justify-end">
-        <LinkButton href="/novo/dica" label="Adicionar" icon={Plus} className="bg-white text-black"/>
+        <LinkButton
+          href="/novo/dica"
+          label="Adicionar"
+          icon={Plus}
+          className="bg-white text-black"
+        />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4 h-[60vh] overflow-y-auto">
-        {data?.posts.map((tip, index) => (
-          <TipCard key={index} tip={tip} />
-        ))}
-      </div>
+      {data && data?.posts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-3 h-[60vh] overflow-y-auto">
+          {data?.posts.map((tip, index) => (
+            <TipCard key={index} tip={tip} />
+          ))}
+        </div>
+      ) : (
+        <NothingToShow name="dica" />
+      )}
 
       <Pagination currentPage={1} pages={data!.pages} setSearch={setSearch} />
     </Container>

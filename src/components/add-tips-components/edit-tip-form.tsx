@@ -20,7 +20,7 @@ type Props = {
 }
 
 const EditTipForm = ({ tip, content }: Props) => {
-  const { mutate } = useUpdateTip()
+  const { mutateAsync } = useUpdateTip()
   const { data: users } = useGetUsers("", "100")
 
   const { isLoading, toggleLoading } = useIsLoading()
@@ -29,14 +29,14 @@ const EditTipForm = ({ tip, content }: Props) => {
   if (!tip) return <LoadingData />
 
   const [updateTip, setUpdateTip] = useState<UpdateTipDTO>({
-    id: tip._id,
     content,
-    tags: "",
-    title: tip.title,
+    id: tip._id,
     image: tip.image,
-    author: tip.author._id,
+    title: tip.title,
     category: tip.category,
+    author: tip.author._id,
     author_notes: tip.author_notes,
+    tags: tip.tags ? tip.tags?.join(",") : "",
   })
 
   function handleImage(e: ChangeEvent<HTMLInputElement>) {
@@ -45,6 +45,7 @@ const EditTipForm = ({ tip, content }: Props) => {
       const imgURL = URL.createObjectURL(image)
       setPreviewImage(imgURL)
       setUpdateTip({ ...updateTip, image: image })
+      return () => URL.revokeObjectURL(imgURL)
     }
   }
 
@@ -52,11 +53,11 @@ const EditTipForm = ({ tip, content }: Props) => {
     e.preventDefault()
     toggleLoading(true)
 
-    let newImageURL: string | undefined = tip?.image
+    let newImageURL = tip?.image
 
     try {
-      if (updateTip.image instanceof File) {
-        await deleteFromFirebase(tip?.image!, "tips")
+      if (previewImage && updateTip.image instanceof File) {
+        await deleteFromFirebase(tip!.image, "tips")
         newImageURL = await uploadToFirebase(updateTip.image, "tips")
       }
 
@@ -70,18 +71,15 @@ const EditTipForm = ({ tip, content }: Props) => {
         category: updateTip.category,
         author_notes: updateTip.author_notes,
       }
-      console.log(data)
-      mutate(data)
+
+      await mutateAsync(data)
 
       toast.success("Atualiado com sucesso")
-      toggleLoading(false)
     } catch (error) {
       console.log("Erro ao atualizar os dados", error)
-
       if (newImageURL !== tip?.image) {
         await deleteFromFirebase(newImageURL!, "tips")
       }
-
       toast.error("Erro ao atualizar os dados. Por favor, tente novamente.")
     } finally {
       toggleLoading(false)
@@ -145,11 +143,17 @@ const EditTipForm = ({ tip, content }: Props) => {
         <Select.Root>
           <Select.Label label="Autor" />
           <Select.Container
-            defaultValue={""}
+            defaultValue={updateTip.author}
             onChange={(e) =>
               setUpdateTip({ ...updateTip, author: e.target.value })
             }
           >
+            <Select.Option
+              selected
+              disabled
+              value={tip.author._id}
+              label={`${tip.author.firstname} ${tip.author.lastname}`}
+            />
             {users?.users ? (
               users?.users.map((user, index) => (
                 <Select.Option

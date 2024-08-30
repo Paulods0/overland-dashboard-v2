@@ -18,19 +18,15 @@ const TipCard = ({ tip }: Props) => {
         className="w-full h-[20vh] rounded-lg object-contain"
       />
 
-      <div className="flex w-full items-start justify-between py-4">
+      <div className="flex w-full items-end justify-between py-4">
         <div className="flex flex-col items-start w-full">
           <h1>{tip.title}</h1>
-          <h4 className="text-xs font-bold italic">Dicas</h4>
           <h4 className="italic text-xs">{newDate}</h4>
+          <h4 className="italic text-xs font-bold mt-2">#Dicas</h4>
         </div>
 
         <div className="flex flex-col items-end w-full gap-2">
           <TipActionButtons tip={tip} />
-          <div className="text-xs flex flex-col">
-            <p className="italic">Autor</p>
-            <p>{`${tip.author.firstname} ${tip.author.lastname}`}</p>
-          </div>
         </div>
       </div>
     </Box>

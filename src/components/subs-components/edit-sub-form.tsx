@@ -1,9 +1,7 @@
-
 import {
   Subscriber,
   UpdateSubscriberDTO,
 } from "@/api/subscriber/subscriber.types"
-
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
 import Loading from "../global/loading"
@@ -19,7 +17,7 @@ type Props = {
 }
 
 const EditSubForm = ({ subscriber }: Props) => {
-  const { mutate, isPending } = useUpdateSub()
+  const { mutateAsync, isPending } = useUpdateSub()
 
   const [sub, setSub] = useState<UpdateSubscriberDTO>({
     id: subscriber._id,
@@ -30,13 +28,13 @@ const EditSubForm = ({ subscriber }: Props) => {
     countryCode: subscriber.countryCode,
   })
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     try {
       const data: UpdateSubscriberDTO = { ...sub }
       toast.success("Dados atualizados com sucesso")
       console.log(data)
-      mutate(data)
+      await mutateAsync(data)
     } catch (error) {
       toast.error("Erro ao atualizar os dados, tente novamente")
     }

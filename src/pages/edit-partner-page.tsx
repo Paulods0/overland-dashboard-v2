@@ -9,7 +9,6 @@ import { useGetSinglePartner } from "@/lib/tanstack-query/partner/partner-querie
 const EditPartnerPage = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetSinglePartner(id!)
-  console.log(data)
 
   const [content, setContent] = useState("")
 

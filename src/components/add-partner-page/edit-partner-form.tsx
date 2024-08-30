@@ -20,7 +20,7 @@ type Props = {
 }
 
 const EditPartnerForm = ({ partner, content }: Props) => {
-  const { mutate } = useUpdatePartner()
+  const { mutateAsync } = useUpdatePartner()
   const { data: users } = useGetUsers("", "100")
 
   const { isLoading, toggleLoading } = useIsLoading()
@@ -43,7 +43,8 @@ const EditPartnerForm = ({ partner, content }: Props) => {
       const image = e.target.files[0]
       const imgURL = URL.createObjectURL(image)
       setPreviewImage(imgURL)
-      setUpdatePartner({ ...updatePartner, image: image as File })
+      setUpdatePartner({ ...updatePartner, image: image })
+      return () => URL.revokeObjectURL(imgURL)
     }
   }
 
@@ -51,10 +52,10 @@ const EditPartnerForm = ({ partner, content }: Props) => {
     e.preventDefault()
     toggleLoading(true)
 
-    let newImageURL: string | undefined = partner?.image
+    let newImageURL = partner?.image
 
     try {
-      if (updatePartner.image instanceof File) {
+      if (previewImage && updatePartner.image instanceof File) {
         await deleteFromFirebase(partner?.image!, "partners")
         newImageURL = await uploadToFirebase(updatePartner.image, "partners")
       }
@@ -69,19 +70,19 @@ const EditPartnerForm = ({ partner, content }: Props) => {
         author: updatePartner.author,
         author_notes: updatePartner.author_notes,
       }
-      console.log(data)
-      mutate(data)
 
-      toast.success("Atualiado com sucesso")
+      await mutateAsync(data)
+
+      toast.success("Atualiado com sucesso.")
       toggleLoading(false)
     } catch (error) {
-      console.log("Erro ao atualizar os dados", error)
+      toast.success("Erro ao atualizar.Tente novamente.")
+      console.log("Erro ao atualizar.", error)
 
       if (newImageURL !== partner?.image) {
         await deleteFromFirebase(newImageURL!, "partners")
       }
-
-      toast.error("Erro ao atualizar os dados. Por favor, tente novamente.")
+      toast.error("Erro ao atualizar. Tente novamente.")
     } finally {
       toggleLoading(false)
     }
@@ -129,7 +130,7 @@ const EditPartnerForm = ({ partner, content }: Props) => {
             }}
           />
         </Input.Root>
-        <Input.Root>
+        {/* <Input.Root>
           <Input.Label title="Data*" />
           <Input.Field
             type="date"
@@ -141,7 +142,7 @@ const EditPartnerForm = ({ partner, content }: Props) => {
               })
             }}
           />
-        </Input.Root>
+        </Input.Root> */}
 
         <Input.Root>
           <Input.Label title="Notas do autor (opcional)" />
@@ -160,11 +161,17 @@ const EditPartnerForm = ({ partner, content }: Props) => {
         <Select.Root>
           <Select.Label label="Autor" />
           <Select.Container
-            defaultValue={""}
+            defaultValue={partner.author._id}
             onChange={(e) =>
               setUpdatePartner({ ...updatePartner, author: e.target.value })
             }
           >
+            <Select.Option
+              selected
+              disabled
+              value={partner.author._id}
+              label={`${partner.author.firstname} ${partner.author.lastname}`}
+            />
             {users?.users ? (
               users?.users.map((user, index) => (
                 <Select.Option

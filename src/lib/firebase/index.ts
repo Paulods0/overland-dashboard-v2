@@ -51,7 +51,7 @@ export async function deleteFromFirebase(
     await deleteObject(imageRef)
   } catch (error: any) {
     if (error.code === "storage/object-not-found") {
-      console.warn("Imagem não encontrada no Firebase, continuando a remoção.")
+      console.error("Imagem não encontrada no Firebase, continuando a remoção.")
     } else {
       console.log("Error ao remover a imagem no firebase", error)
       throw error

@@ -27,7 +27,7 @@ export const HEADER_LINKS = [
     icon: Store,
   },
   {
-    label: "Inscritos",
+    label: "Newsletter",
     link: "/inscritos",
     icon: UserRoundCheck,
   },

@@ -13,19 +13,19 @@ type Props = {
 }
 
 const TipActionButtons = ({ tip }: Props) => {
+  const { mutateAsync } = useDeleteTip()
   const { isLoading, toggleLoading } = useIsLoading()
-  const { mutate } = useDeleteTip()
 
   async function handleDeleteTip() {
     toggleLoading(true)
     try {
       await deleteFromFirebase(tip.image, "tips")
-      mutate(tip._id)
-      toggleLoading(false)
+      await mutateAsync(tip._id)
     } catch (error) {
-      toggleLoading(false)
-      toast.error("Erro ao remover a dica, tente novamente")
+      toast.error("Erro ao remover. Tente novamente.")
       console.log(error)
+    } finally {
+      toggleLoading(false)
     }
   }
 
