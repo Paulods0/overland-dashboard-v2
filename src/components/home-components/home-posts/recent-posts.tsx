@@ -1,5 +1,4 @@
 import { EyeIcon, Plus } from "lucide-react"
-
 import RecentPostTable from "./recent-post-table"
 import Loading from "@/components/global/loading"
 import LinkButton from "../../ui/button/link-button"
@@ -38,10 +37,10 @@ const RecentPosts = () => {
       </div>
 
       <ul className="flex flex-col gap-2 h-[50vh] w-full overflow-auto lg:pr-2">
-        {!data?.posts ? (
-          <NothingToShow name="post" />
-        ) : (
+        {data && data?.posts.length > 0 ? (
           <RecentPostTable posts={data.posts} />
+        ) : (
+          <NothingToShow name="post" />
         )}
       </ul>
     </div>

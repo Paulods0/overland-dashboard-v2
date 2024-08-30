@@ -166,12 +166,12 @@ const EditPartnerForm = ({ partner, content }: Props) => {
               setUpdatePartner({ ...updatePartner, author: e.target.value })
             }
           >
-            <Select.Option
+            {/* <Select.Option
               selected
               disabled
               value={partner.author._id}
               label={`${partner.author.firstname} ${partner.author.lastname}`}
-            />
+            /> */}
             {users?.users ? (
               users?.users.map((user, index) => (
                 <Select.Option

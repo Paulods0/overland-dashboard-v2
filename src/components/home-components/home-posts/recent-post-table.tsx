@@ -25,7 +25,7 @@ const RecentPostTable = ({ posts }: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {posts.map((post, index) => (
+        {posts?.map((post, index) => (
           <TableRow key={index}>
             <TableCell>
               <img
@@ -36,8 +36,10 @@ const RecentPostTable = ({ posts }: Props) => {
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-1">
-                <span>{post.author.firstname}</span>
-                <span>{post.author.lastname}</span>
+                <span>
+                  {post.author ? post.author.firstname : "Desconhecido"}
+                </span>
+                <span>{post.author ? post.author.lastname : ""}</span>
               </div>
             </TableCell>
             <TableCell>{post.highlighted ? "Sim" : "Não"}</TableCell>
