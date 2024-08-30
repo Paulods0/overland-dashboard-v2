@@ -1,8 +1,3 @@
-import Box from "@/components/global/box"
-import { Edit, Trash } from "lucide-react"
-import Modal from "@/components/global/modal"
-import Button from "@/components/ui/button/button"
-import AlertModal from "@/components/global/alert-modal"
 import {
   Table,
   TableBody,
@@ -11,12 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import EditProductForm from "./edit-product-form"
-import { Product } from "@/api/product/product.types"
-import useIsLoading from "@/hooks/useIsLoading"
-import { useDeleteProduct } from "@/lib/tanstack-query/product/product-mutation"
 import { toast } from "react-toastify"
+import Box from "@/components/global/box"
+import { Edit, Trash } from "lucide-react"
+import Modal from "@/components/global/modal"
+import useIsLoading from "@/hooks/useIsLoading"
+import EditProductForm from "./edit-product-form"
+import Button from "@/components/ui/button/button"
 import { deleteFromFirebase } from "@/lib/firebase"
+import { Product } from "@/api/product/product.types"
+import AlertModal from "@/components/global/alert-modal"
+import { useDeleteProduct } from "@/lib/tanstack-query/product/product-mutation"
 
 type Props = {
   products: Product[]
@@ -24,20 +24,19 @@ type Props = {
 
 const StoreTable = ({ products }: Props) => {
   const { isLoading, toggleLoading } = useIsLoading()
-  
-  const { mutate } = useDeleteProduct()
+  const { mutateAsync } = useDeleteProduct()
 
   async function handleDeleteProduct(id: string, image: string) {
     toggleLoading(true)
     try {
       await deleteFromFirebase(image, "products")
-      mutate(id)
-      toggleLoading(false)
+      mutateAsync(id)
       toast.success("Artigo removido com sucesso")
     } catch (error) {
-      toggleLoading(false)
       toast.error("Erro ao remover o artigo, tente novamente")
       console.log(error)
+    } finally {
+      toggleLoading(false)
     }
   }
 

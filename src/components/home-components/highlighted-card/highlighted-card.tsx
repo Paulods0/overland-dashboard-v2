@@ -6,7 +6,7 @@ const HighlightedCard = () => {
   const { data, isLoading } = useGetHighlightedPost()
 
   if (isLoading) return <LoadingData />
-  if (!data) return <NothingToShow name="destaque" />
+  if (!data) return <NothingToShow name="destaque" className="w-[300px] h-full border rounded-3xl"/>
 
   return (
     <div className="relative h-full rounded-3xl w-full lg:flex-1">

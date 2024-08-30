@@ -4,11 +4,10 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage"
-import { toast } from "react-toastify"
 import { renameImageName } from "../utils"
 import { storage } from "../../config/firebase.config"
 
-export type firebaseFolder =
+export type FirebaseFolder =
   | "posts"
   | "classified-posts"
   | "products"
@@ -18,50 +17,77 @@ export type firebaseFolder =
   | "tips"
   | "partners"
 
-  export function getImagePathFromFirebaseURL(
-    imageURL: string,
-    folder: firebaseFolder
-  ): string {
-    const imagePathArray = imageURL.split(`/o/${folder}%2F`)
-    const imageName = imagePathArray[1].split("?alt=")[0]
+/**
+ * Extracts the image path from the Firebase URL.
+ *
+ * @param imageURL - The full URL of the image stored in Firebase.
+ * @param folder - The folder in Firebase where the image is stored.
+ * @returns The name of the image.
+ */
 
-    return imageName
-  }
+export function getImagePathFromFirebaseURL(
+  imageURL: string,
+  folder: FirebaseFolder
+): string {
+  const [_, imagePath] = imageURL.split(`/o/${folder}%2F`)
+  const imageName = imagePath.split("?alt=")[0]
+  return imageName
+}
 
-  export async function deleteFromFirebase(
-    image: string,
-    firebaseFolder: firebaseFolder
-  ) {
+/**
+ * Deletes an image from Firebase storage.
+ *
+ * @param image - The full URL of the image to be deleted.
+ * @param firebaseFolder - The folder in Firebase where the image is stored.
+ */
+
+export async function deleteFromFirebase(
+  image: string,
+  firebaseFolder: FirebaseFolder
+): Promise<void> {
+  try {
     const imageName = getImagePathFromFirebaseURL(image, firebaseFolder)
-
     const imageRef = ref(storage, `${firebaseFolder}/${imageName}`)
     await deleteObject(imageRef)
+  } catch (error: any) {
+    if (error.code === "storage/object-not-found") {
+      console.warn("Imagem não encontrada no Firebase, continuando a remoção.")
+    } else {
+      console.log("Error ao remover a imagem no firebase", error)
+      throw error
+    }
   }
+}
 
-  export async function uploadToFirebase(
-    image: File,
-    firbaseImageFolderPath: firebaseFolder
-  ) {
-    const filename = renameImageName(image?.name)
-    const imageRef = ref(storage, `${firbaseImageFolderPath}/` + filename)
+/**
+ * Subir uma imagem no Firebase storage.
+ *
+ * @param image - A imagem a ser salva.
+ * @param firebaseFolderPath - A pasta no Firebase onde a imagem será salva/armazenada.
+ * @returns A downloadURL da imagem que foi salva no firebase.
+ */
+
+export async function uploadToFirebase(
+  image: File,
+  firbaseFolderPath: FirebaseFolder
+) {
+  try {
+    const filename = renameImageName(image!.name)
+    const imageRef = ref(storage, `${firbaseFolderPath}/` + filename)
     const uploadTask = uploadBytesResumable(imageRef, image)
-    
-    await new Promise((resolve: (value?: unknown) => void, reject) => {
+
+    await new Promise<void>((resolve, reject) => {
       uploadTask.on(
         "state_changed",
         () => {},
-        (error) => {
-          toast.error(error.message, {
-            autoClose: 1000,
-            hideProgressBar: true,
-          })
-          reject()
-        },
-        () => {
-          resolve()
-        }
+        (error) => reject(error),
+        () => resolve()
       )
     })
     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
     return downloadURL
+  } catch (error) {
+    console.log("Error ao fazer upload da imagem", error)
+    throw error
   }
+}

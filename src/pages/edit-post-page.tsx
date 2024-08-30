@@ -9,7 +9,6 @@ import EdittPostForm from "@/components/add-post-components/edit-post-form"
 const EditPostPage = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetSinglePost(id!)
-
   const [content, setContent] = useState("")
 
   useEffect(() => {

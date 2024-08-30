@@ -1,27 +1,27 @@
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
+import Loading from "../global/loading"
 import Button from "../ui/button/button"
 import { Input } from "../ui/input-field"
 import { DialogClose } from "../ui/dialog"
-// import { deleteFromFirebase } from "@/lib/firebase"
+import { Select } from "../ui/select-field"
+import useIsLoading from "@/hooks/useIsLoading"
+import { deleteFromFirebase } from "@/lib/firebase"
+import { productCategories } from "./add-store-form"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { Product, UpdateProductDTO } from "@/api/product/product.types"
-import useIsLoading from "@/hooks/useIsLoading"
 import { useUpdateProduct } from "@/lib/tanstack-query/product/product-mutation"
-import Loading from "../global/loading"
-import { productCategories } from "./add-store-form"
-import { Select } from "../ui/select-field"
 
 type Props = {
   data: Product
 }
 
 const EditProductForm = ({ data }: Props) => {
-  const { mutate } = useUpdateProduct()
+  const { mutateAsync } = useUpdateProduct()
   const { isLoading, toggleLoading } = useIsLoading()
 
-  const [_, setPreviewImage] = useState<string | null>(null)
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [product, setProduct] = useState<UpdateProductDTO>({
     id: data._id,
     name: data.name,
@@ -37,6 +37,7 @@ const EditProductForm = ({ data }: Props) => {
       const urlImage = URL.createObjectURL(image)
       setPreviewImage(urlImage)
       setProduct({ ...product, image: urlImage })
+      return () => URL.revokeObjectURL(urlImage)
     }
   }
 
@@ -44,19 +45,24 @@ const EditProductForm = ({ data }: Props) => {
     e.preventDefault()
     toggleLoading(true)
     try {
-      let newImage: string | null = data.image
+      let newImage: string = data.image
 
-      const updatedData: UpdateProductDTO = { ...product, image: newImage }
-      mutate(updatedData)
+      if (previewImage) {
+        await deleteFromFirebase(data.image, "products")
+        newImage = product.image as string
+      }
 
-      toggleLoading(false)
+      const updatedData: UpdateProductDTO = {
+        ...product,
+        image: newImage,
+      }
+      mutateAsync(updatedData)
       toast.success("Artigo atualizado com sucesso")
-
-      console.log(updatedData)
     } catch (error) {
       console.log(error)
-      toggleLoading(false)
       toast.error("Erro ao atualizar os dados")
+    } finally {
+      toggleLoading(false)
     }
   }
   return (

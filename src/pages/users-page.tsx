@@ -34,8 +34,8 @@ const UsersPage = () => {
             trigger={
               <Button
                 icon={Plus}
-                buttonType="base"
                 label="Adicionar"
+                buttonType="base"
                 className="w-fit rounded-full"
               />
             }

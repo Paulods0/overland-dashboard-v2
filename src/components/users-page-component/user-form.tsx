@@ -27,7 +27,7 @@ export const roles = [
 ]
 
 const UserForm = () => {
-  const { mutate, isPending } = useCreateUser()
+  const { mutateAsync, isPending } = useCreateUser()
 
   const [user, setUser] = useState<CreateUserDTO>({
     role: "",
@@ -45,39 +45,43 @@ const UserForm = () => {
       const urlImage = URL.createObjectURL(image)
       setUser({ ...user, image: image })
       setPreviewImage(urlImage)
+      return () => URL.revokeObjectURL(urlImage)
     }
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
-      if (
-        !user.firstname ||
-        !user.firstname ||
-        !user.email ||
-        !user.role ||
-        !user.password
-      ) {
+      const requiredFields = [
+        "firstname",
+        "lastname",
+        "email",
+        "role",
+        "password",
+      ]
+      const isValid = requiredFields.every(
+        (field) => user[field as keyof CreateUserDTO]
+      )
+
+      if (!isValid) {
         toast.error("Preencha todos os dados obrigatórios")
         return
       }
 
-      const imagedURL = user.image
+      const imageUrl = user.image
         ? await uploadToFirebase(user.image as File, "profile")
         : ""
 
       const data: CreateUserDTO = {
         ...user,
-        image: imagedURL as string,
+        image: imageUrl as string,
       }
-      mutate(data)
+      mutateAsync(data)
       toast.success("Usuário adicionado com sucesso")
       resetInputs()
-      console.log(data)
     } catch (error) {
-      resetInputs()
-      toast.error("Erro ao criar usuário, tente novamente")
       console.error(error)
+      toast.error("Erro ao criar usuário, tente novamente")
     }
   }
 
@@ -90,6 +94,7 @@ const UserForm = () => {
       password: "",
       firstname: "",
     })
+    setPreviewImage(null)
   }
 
   return (
@@ -163,9 +168,9 @@ const UserForm = () => {
         </DialogClose>
 
         <FormButton
+          label="Salvar"
           disabled={isPending}
           icon={isPending ? Loading : Save}
-          label="Salvar"
         />
       </div>
     </form>

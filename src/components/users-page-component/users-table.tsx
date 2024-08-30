@@ -5,10 +5,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import Loading from "../global/loading"
 import Box from "@/components/global/box"
 import UserTableRow from "./user-table-row"
 import { User } from "@/api/users/user.type"
-import Loading from "../global/loading"
 
 type Props = {
   users?: User[]

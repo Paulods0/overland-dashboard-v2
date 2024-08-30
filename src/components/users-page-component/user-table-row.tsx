@@ -14,14 +14,14 @@ type Props = {
 }
 
 const UserTableRow = ({ user }: Props) => {
-  const { mutate } = useDeleteUser()
+  const { mutateAsync, isPending } = useDeleteUser()
 
   async function handleDeleteUser(userData: User) {
     try {
       if (userData.image) {
         await deleteFromFirebase(userData.image, "profile")
       }
-      mutate(userData._id)
+      await mutateAsync(userData._id)
       toast.success("Usuario deletado com sucesso")
     } catch (error) {
       console.error(error)
@@ -58,9 +58,10 @@ const UserTableRow = ({ user }: Props) => {
             trigger={<Button icon={Trash} buttonType="danger" />}
             actionBtn={
               <Button
-                onClick={() => handleDeleteUser(user)}
-                label="Remover"
                 buttonType="danger"
+                disabled={isPending}
+                onClick={() => handleDeleteUser(user)}
+                label={isPending ? "Removendo" : "Remover"}
               />
             }
           />

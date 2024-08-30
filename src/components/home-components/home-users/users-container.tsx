@@ -1,9 +1,9 @@
+import { Plus } from "lucide-react"
 import UserImage from "./user-image"
 import LoadingData from "@/components/global/loading-data"
-import NothingToShow from "@/components/global/nothing-to-show"
 import LinkButton from "@/components/ui/button/link-button"
+import NothingToShow from "@/components/global/nothing-to-show"
 import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
-import { Eye, Plus } from "lucide-react"
 
 const UsersContainer = () => {
   const { data, isLoading } = useGetUsers("", "6")
@@ -18,11 +18,6 @@ const UsersContainer = () => {
         <div className="flex items-center gap-2">
           <LinkButton
             icon={Plus}
-            href="/usuário"
-            className="rounded-full bg-white text-black"
-          />
-          <LinkButton
-            icon={Eye}
             href="/usuários"
             className="rounded-full bg-white text-black"
           />

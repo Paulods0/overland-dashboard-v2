@@ -28,7 +28,7 @@ export const categories = [
 ]
 
 const EdittPostForm = ({ post, content }: Props) => {
-  const { mutate } = useUpdatePost()
+  const { mutateAsync } = useUpdatePost()
   const { data: users } = useGetUsers("", "100")
 
   const { isLoading, toggleLoading } = useIsLoading()
@@ -56,6 +56,7 @@ const EdittPostForm = ({ post, content }: Props) => {
       const urlImage = URL.createObjectURL(image)
       setUpdatePost({ ...updatePost, mainImage: image })
       setPreviewImg(urlImage)
+      return () => URL.revokeObjectURL(urlImage)
     }
   }
 
@@ -63,20 +64,20 @@ const EdittPostForm = ({ post, content }: Props) => {
     e.preventDefault()
     toggleLoading(true)
     try {
-      let postImg = post?.mainImage
+      let currentPostImg = post!.mainImage
 
-      if (previewImg) {
+      if (previewImg && updatePost?.mainImage instanceof File) {
         await deleteFromFirebase(post!.mainImage, "posts")
-        postImg = await uploadToFirebase(updatePost.mainImage as File, "posts")
+        currentPostImg = await uploadToFirebase(updatePost.mainImage, "posts")
       }
 
       const data: UpdatePostDTO = {
         id: post!._id,
         content: content,
-        mainImage: postImg,
-        date: updatePost.date,
         tag: updatePost?.tag,
+        date: updatePost.date,
         title: updatePost.title,
+        mainImage: currentPostImg,
         latitude: updatePost.latitude,
         category: updatePost.category,
         longitude: updatePost.longitude,
@@ -85,12 +86,13 @@ const EdittPostForm = ({ post, content }: Props) => {
         author_notes: updatePost.author_notes,
       }
 
-      mutate(data)
-      toggleLoading(false)
-      toast.success("Atualizado com sucesso")
-    } catch (error: any) {
+      await mutateAsync(data)
+      toast.success("Atualizado com sucesso.")
+    } catch (error) {
+      toast.error("Erro ao atualizar.")
       console.log(error)
-      toast.error("Erro ao atualizar o post")
+    } finally {
+      toggleLoading(false)
     }
   }
 
@@ -116,7 +118,7 @@ const EdittPostForm = ({ post, content }: Props) => {
 
         <img
           alt={updatePost.title}
-          src={previewImg ? previewImg : post.mainImage}
+          src={previewImg || post.mainImage}
           className="size-14 object-contain"
         />
 
@@ -198,7 +200,7 @@ const EdittPostForm = ({ post, content }: Props) => {
               setUpdatePost({ ...updatePost, author_id: e.target.value })
             }
           >
-            {users?.users ? (
+            {users && users?.users.length > 0 ? (
               users?.users.map((user, index) => (
                 <Select.Option
                   key={index}

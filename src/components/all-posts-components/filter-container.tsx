@@ -8,10 +8,17 @@ type Props = {
 
 const FilterContainer = ({ setSearch }: Props) => {
   function handleCategory(category: string) {
-    setSearch((state) => {
-      state.set("category", category)
-      return state
-    })
+    if (category) {
+      setSearch((state) => {
+        state.set("category", category)
+        return state
+      })
+    } else {
+      setSearch((state) => {
+        state.delete("category")
+        return state
+      })
+    }
   }
 
   return (

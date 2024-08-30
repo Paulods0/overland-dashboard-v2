@@ -4,7 +4,7 @@ import { useGetProducts } from "@/lib/tanstack-query/product/product-queries"
 import ProductGrid from "./product-grid"
 
 const ProductContainer = () => {
-  const { data, isLoading } = useGetProducts("", "")
+  const { data, isLoading } = useGetProducts("", "", "2")
 
   if (isLoading) return <LoadingData />
   if (!data?.products) return <NothingToShow name="artigo" />

@@ -25,6 +25,7 @@ export const useUpdateUser = () => {
       }),
   })
 }
+
 export const useDeleteUser = () => {
   const queryClient = useQueryClient()
 

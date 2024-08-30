@@ -4,6 +4,7 @@ import { toast } from "react-toastify"
 import Loading from "../global/loading"
 import Button from "../ui/button/button"
 import { DialogClose } from "../ui/dialog"
+import useIsLoading from "@/hooks/useIsLoading"
 import { Input } from "@/components/ui/input-field"
 import { Select } from "@/components/ui/select-field"
 import FormButton from "../ui/input-field/form-button"
@@ -11,14 +12,13 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { UpdateUserDTO, User } from "@/api/users/user.type"
 import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
 import { useUpdateUser } from "@/lib/tanstack-query/users/user-mutations"
-import useIsLoading from "@/hooks/useIsLoading"
 
 type Props = {
   user: User
 }
 
 const EditUserForm = ({ user }: Props) => {
-  const { mutate } = useUpdateUser()
+  const { mutateAsync } = useUpdateUser()
   const { isLoading, toggleLoading } = useIsLoading()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
@@ -36,7 +36,8 @@ const EditUserForm = ({ user }: Props) => {
       const image = e.target.files[0]
       const urlImage = URL.createObjectURL(image)
       setPreviewImage(urlImage)
-      setUpdateUser({ ...updateUser, image: urlImage })
+      setUpdateUser({ ...updateUser, image: image })
+      return () => URL.revokeObjectURL(urlImage)
     }
   }
 
@@ -44,52 +45,29 @@ const EditUserForm = ({ user }: Props) => {
     e.preventDefault()
     toggleLoading(true)
     try {
-      let newProfileImage: string | undefined = user.image
-      console.log(newProfileImage)
+      let newProfileImage = user.image
 
-      if (previewImage) {
-        if (user.image) {
-          await deleteFromFirebase(user.image, "profile")
-        }
-        newProfileImage = await uploadToFirebase(
-          updateUser.image as File,
-          "profile"
-        )
+      if (previewImage && updateUser.image instanceof File) {
+        if (user.image) await deleteFromFirebase(user.image, "profile")
+        newProfileImage = await uploadToFirebase(updateUser.image, "profile")
       }
 
-      const userData: UpdateUserDTO = { ...updateUser, image: newProfileImage }
-
-      mutate(userData)
-      toast.success("Os dados do usuário foram atualizados com sucesso")
-      toggleLoading(false)
-      console.log(userData)
+      await mutateAsync({ ...updateUser, image: newProfileImage })
+      toast.success("Atualizado com sucesso.")
     } catch (error) {
-      toggleLoading(false)
-      toast.error("Erro ao atualizar os dados do usuário")
+      toast.error("Erro ao atualizar.")
       console.log(error)
+    } finally {
+      toggleLoading(false)
     }
   }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      {previewImage ? (
-        <img
-          src={previewImage}
-          className="size-12 object-contain aspect-square"
-          alt={user.firstname}
-        />
-      ) : user.image ? (
-        <img
-          src={user.image}
-          className="size-12 object-contain aspect-square"
-          alt={user.firstname}
-        />
-      ) : (
-        <img
-          src={"/icons/user.png"}
-          className="size-12 object-contain aspect-square"
-          alt={"Perfil"}
-        />
-      )}
+      <img
+        alt={user.firstname || "Perfil"}
+        className="size-12 object-contain aspect-square"
+        src={previewImage || user.image || "/icons/user.png"}
+      />
 
       <Input.Root>
         <Input.Label title="Imagem" />

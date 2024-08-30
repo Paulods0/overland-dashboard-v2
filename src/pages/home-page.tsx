@@ -1,4 +1,4 @@
-import { Eye, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import Container from "../components/global/container"
 import LinkButton from "@/components/ui/button/link-button"
 import RecentPosts from "../components/home-components/home-posts/recent-posts"
@@ -25,13 +25,8 @@ const HomePage = () => {
               </h1>
               <div className="flex items-center lg:justify-normal justify-end gap-2">
                 <LinkButton
-                  href="#"
+                  href="/loja"
                   icon={Plus}
-                  className="bg-white text-lightBlack lg:w-full w-fit"
-                />
-                <LinkButton
-                  href="#"
-                  icon={Eye}
                   className="bg-white text-lightBlack lg:w-full w-fit"
                 />
               </div>
