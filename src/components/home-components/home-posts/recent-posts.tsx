@@ -6,7 +6,7 @@ import NothingToShow from "@/components/global/nothing-to-show"
 import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 
 const RecentPosts = () => {
-  const { data, isLoading } = useGetAllPosts("", "", "8")
+  const { data, isLoading } = useGetAllPosts("", "8", "")
 
   if (isLoading) {
     return (

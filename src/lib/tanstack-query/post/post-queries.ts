@@ -10,7 +10,7 @@ export const useGetAllPosts = (
 ) => {
   return useQuery<PostResponse>({
     queryKey: [KEYS.GET_POSTS, page, category],
-    queryFn: () => PostAPI.getAllPosts(page, category, limit),
+    queryFn: () => PostAPI.getAllPosts(page, limit, category),
   })
 }
 

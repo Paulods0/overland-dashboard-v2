@@ -53,9 +53,9 @@ const StorePage = () => {
         <NothingToShow name="artigo" />
       )}
       <Pagination
-        currentPage={Number(currentPage)}
         pages={data!.pages}
         setSearch={setSearch}
+        currentPage={Number(currentPage)}
       />
     </Container>
   )

@@ -24,7 +24,7 @@ export const categories = [
   { value: "Passeios", label: "Passeios" },
   { value: "Histórias", label: "Histórias" },
   { value: "Jornal Overland", label: "Jornal Overland" },
-  { value: "Overland Explorer", label: "Overland Explorer" },
+  { value: "Overland Experience", label: "Overland Experience" },
 ]
 
 const EdittPostForm = ({ post, content }: Props) => {

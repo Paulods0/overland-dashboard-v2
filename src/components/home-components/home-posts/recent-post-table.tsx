@@ -6,8 +6,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Edit3 } from "lucide-react"
 import { Post } from "@/api/post/post.types"
 import { formatDate } from "@/utils/date-fns"
+import LinkButton from "@/components/ui/button/link-button"
 
 type Props = {
   posts: Post[]
@@ -44,6 +46,13 @@ const RecentPostTable = ({ posts }: Props) => {
             </TableCell>
             <TableCell>{post.highlighted ? "Sim" : "Não"}</TableCell>
             <TableCell>{formatDate(post.date)}</TableCell>
+            <TableCell className="underline">
+              <LinkButton
+                href={`post/${post._id}`}
+                icon={Edit3}
+                className="bg-white text-black size-8 p-2"
+              />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

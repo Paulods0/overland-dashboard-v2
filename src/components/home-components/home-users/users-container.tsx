@@ -12,8 +12,8 @@ const UsersContainer = () => {
   if (!data?.users) return <NothingToShow name="usuário" />
 
   return (
-    <div className="relative lg:col-span-1 gap-4 rounded-2xl border h-full py-4 items-start w-full justify-center flex bg-blackAndLight flex-col">
-      <div className="w-full flex items-center justify-between mb-4 px-6">
+    <div className="relative lg:col-span-1 gap-2 rounded-2xl border h-full py-4 items-start w-full justify-center flex bg-blackAndLight flex-col">
+      <div className="w-full flex items-center justify-between px-6">
         Usuários
         <div className="flex items-center gap-2">
           <LinkButton
@@ -24,7 +24,7 @@ const UsersContainer = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 lg:grid-cols-3 h-full gap-2 w-full place-items-center z-20">
+      <div className="grid grid-cols-3 lg:grid-cols-4 h-full w-full place-items-center z-20">
         {data?.users.map((user, index) => (
           <UserImage
             key={index}

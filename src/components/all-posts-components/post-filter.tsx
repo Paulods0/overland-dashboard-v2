@@ -8,7 +8,11 @@ type Props = {
 
 const PostFilter = ({ handleCategory }: Props) => {
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
-    handleCategory(e.target.value.toLowerCase().replace(" ", "-"))
+    if (e.target.value) {
+      handleCategory(e.target.value.toLowerCase().replace(" ", "-"))
+    } else {
+      handleCategory(e.target.value)
+    }
   }
 
   return (

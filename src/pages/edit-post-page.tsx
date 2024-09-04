@@ -19,18 +19,11 @@ const EditPostPage = () => {
 
   if (isLoading) return <LoadingData />
 
-  function handleContent(newContent: string) {
-    setContent(newContent)
-  }
-
   return (
     <main className="min-h-screen py-6">
       <Container>
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4">
-          <TipTapEditor
-            content={content!}
-            setContent={(newContent: string) => handleContent(newContent)}
-          />
+          <TipTapEditor content={content!} setContent={setContent} />
           <EdittPostForm post={data} content={content!} />
         </section>
         <pre className="text-sm text-zinc-400">{}</pre>

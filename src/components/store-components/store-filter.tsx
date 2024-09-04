@@ -14,7 +14,7 @@ const StoreFilter = ({ searchValue, setSearch }: Props) => {
 
   function handleCategory(e: ChangeEvent<HTMLSelectElement>) {
     const category = e.target.value
-    if (category !== "") {
+    if (category && category !== "") {
       setSearch((state) => {
         state.set("category", category)
         return state

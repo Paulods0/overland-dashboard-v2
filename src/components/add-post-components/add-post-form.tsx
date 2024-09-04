@@ -4,6 +4,7 @@ import Loading from "../global/loading"
 import { categories } from "./edit-post-form"
 import Box from "../../components/global/box"
 import useIsLoading from "@/hooks/useIsLoading"
+import { useAuth } from "@/context/auth-context"
 import { uploadToFirebase } from "@/lib/firebase"
 import NothingToShow from "../global/nothing-to-show"
 import { CreatePostDTO } from "@/api/post/post.types"
@@ -13,7 +14,6 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { Select } from "../../components/ui/select-field"
 import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 import { useCreatePost } from "@/lib/tanstack-query/post/post-mutations"
-import { useAuth } from "@/context/auth-context"
 
 type FormProps = {
   content: string

@@ -2,7 +2,7 @@ import "./tip-tap.style.css"
 
 import ToolBar from "./toolbar"
 import Iframe from "./extensions"
-import { useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import Image from "@tiptap/extension-image"
 import Youtube from "@tiptap/extension-youtube"
 import StarterKit from "@tiptap/starter-kit"
@@ -11,7 +11,7 @@ import { useEditor, EditorContent } from "@tiptap/react"
 
 type Props = {
   content?: string
-  setContent: (newCont: string) => void
+  setContent: Dispatch<SetStateAction<string>>
 }
 
 const TipTapEditor = ({ content, setContent }: Props) => {
@@ -51,7 +51,7 @@ const TipTapEditor = ({ content, setContent }: Props) => {
 
   useEffect(() => {
     if (editor && content) {
-      editor.commands.setContent(content)
+      editor.commands.setContent(content, false)
     }
   }, [editor, content])
 
