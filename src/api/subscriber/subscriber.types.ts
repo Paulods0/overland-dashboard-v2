@@ -25,6 +25,7 @@ export interface UpdateSubscriberDTO {
 }
 
 export interface SubscriberResponseDTO {
+  total: number
   pages: number
   subs: Subscriber[]
 }

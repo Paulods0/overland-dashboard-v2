@@ -1,6 +1,6 @@
 import Logo from "../logo"
 import ThemeButton from "../theme-button"
-import LogoutButton from "./logout-button"
+// import LogoutButton from "./logout-button"
 import NavigationBar from "./navigation-bar"
 import MobileMenuButton from "./mobile-menu/mobile-menu-button"
 import UserLogged from "./user-logged"
@@ -19,9 +19,9 @@ const SideBar = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex">
           <ThemeButton />
-          <LogoutButton />
+          {/* <LogoutButton /> */}
         </div>
       </div>
     </aside>

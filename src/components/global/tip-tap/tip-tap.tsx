@@ -2,11 +2,11 @@ import "./tip-tap.style.css"
 
 import ToolBar from "./toolbar"
 import Iframe from "./extensions"
-import { Dispatch, SetStateAction, useEffect } from "react"
 import Image from "@tiptap/extension-image"
-import Youtube from "@tiptap/extension-youtube"
 import StarterKit from "@tiptap/starter-kit"
+import Youtube from "@tiptap/extension-youtube"
 import Underline from "@tiptap/extension-underline"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { useEditor, EditorContent } from "@tiptap/react"
 
 type Props = {
@@ -40,7 +40,7 @@ const TipTapEditor = ({ content, setContent }: Props) => {
     ],
     editorProps: {
       attributes: {
-        class: "h-full outline-none p-4",
+        class: "h-full whitespace-nowrap outline-none p-4",
       },
     },
     content: content,

@@ -21,7 +21,7 @@ const PostCard = ({ post }: Props) => {
         <h1 className="font-bold text-lg line-clamp-1">{post.title}</h1>
         <div className="w-full flex items-end justify-between">
           <p className="text-xs">{post.category}</p>
-          <p className="italic text-xs">{formatedDate}</p>
+          <p className="italic line-clamp-1 text-xs">{formatedDate}</p>
         </div>
         <PostActionButtons
           postId={post._id}

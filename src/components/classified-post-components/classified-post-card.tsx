@@ -1,54 +1,92 @@
 import Box from "../global/box"
 import Modal from "../global/modal"
 import Button from "../ui/button/button"
-import { Select } from "../ui/select-field"
-import AlertModal from "../global/alert-modal"
-import { Edit, Save, Trash } from "lucide-react"
+import { Edit2, Eye } from "lucide-react"
+import EditClassifiedForm from "./edit-classified-form"
+import { Classified } from "@/api/classified/classified.types"
+import RemoveClassifiedDialog from "./remove-classified-dialog"
 
-const ClassifiedPostCard = () => {
+type Props = {
+  post: Classified
+}
+
+const ClassifiedPostCard = ({ post }: Props) => {
+  const price = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "AKZ",
+  }).format(post.price)
+
+  const status =
+    post.status === "inactive"
+      ? "Inativo"
+      : post.status === "suspended"
+      ? "Suspenso"
+      : "Ativo"
+
+  const statusColor =
+    post.status === "inactive"
+      ? "bg-red-600"
+      : post.status === "suspended"
+      ? "bg-yellow-500"
+      : "bg-green-600"
+
   return (
-    <Box className="space-y-4">
+    <Box className="relative h-fit border rounded-lg p-4 w-full flex flex-col gap-2">
       <img
-        src="/bg.jpg"
-        className="h-40 object-cover w-full rounded-lg"
-        alt=""
+        src={post.mainImage}
+        alt="image do post"
+        className="w-full h-[15vh] rounded-lg object-cover"
       />
+      <div className="flex flex-col gap-2">
+        <h1 className="font-bold text-lg line-clamp-1">{post.title}</h1>
 
-      <div className="flex flex-col w-full">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-lg font-bold">Título</h1>
-          <h4 className="italic text-xs">21 de julho 2024</h4>
+        <ul className="w-full space-y-2">
+          <li className="text-xs">Preço: {price}</li>
+          <li className="text-xs">
+            Tipo: {post.type === "sell" ? "à venda" : "quer comprar"}
+          </li>
+          <li className="text-xs">
+            Estado: <span className={`px-1 ${statusColor}`}>{status}</span>
+          </li>
+        </ul>
+
+        <div className="text-xs flex flex-col  border-y py-2">
+          <h2 className="font-bold uppercase mb-2">Dados do autor</h2>
+          <ul className="w-full space-y-2">
+            <li>
+              Nome:
+              <span className="ml-1">{`${post.author.firstname} ${post.author.lastname}`}</span>
+            </li>
+            <li>
+              Email:
+              <span className="ml-1">{post.author.email}</span>
+            </li>
+            <li>
+              Tel:
+              <span className="ml-1">{post.author.phone}</span>
+            </li>
+          </ul>
         </div>
 
-        <div className="flex items-center justify-end gap-2 ">
-          <AlertModal
-            title="Tens a certeza que pretendes eliminar este documento?"
-            actionBtn={<Button className="bg-red-700" label="Eliminar" />}
-            trigger={
-              <Button
-                icon={Trash}
-                className="bg-red-700 text-white border-none"
-              />
-            }
-          />
-
+        <div className="flex items-center justify-between">
           <Modal
-            title="Atualizar o estado"
-            trigger={<Button icon={Edit} />}
-            actionBtn={
-              <Button
-                className="bg-indigo-700 text-white"
-                icon={Save}
-                label="Salvar alterações"
-              />
+            title="Editar Classificado"
+            description="Editar classificado."
+            trigger={
+              <Button icon={Edit2} buttonType="base" className="rounded-full" />
             }
           >
-            <Select.Container>
-              <Select.Option label="Ativo" />
-              <Select.Option label="Inativo" />
-              <Select.Option label="Suspenso" />
-            </Select.Container>
+            <EditClassifiedForm post={post} />
           </Modal>
+
+          <div className="flex items-center  gap-2">
+            <Button
+              icon={Eye}
+              buttonType="transparent"
+              className="rounded-full"
+            />
+            <RemoveClassifiedDialog post={post} />
+          </div>
         </div>
       </div>
     </Box>

@@ -7,7 +7,7 @@ const UserLogged = () => {
       <img
         alt="usuário"
         className="size-10 object-cover rounded-full"
-        src={user?.image ? user?.image : "/profile.jpg"}
+        src={user?.image ? user?.image : "/icons/user.png"}
       />
       <div className="flex items-center gap-1">
         <span>{user?.firstname}</span>

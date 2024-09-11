@@ -1,7 +1,7 @@
+import { isAxiosError } from "axios"
+import { toast } from "react-toastify"
 import axios from "@/config/axios.config"
 import { CreatePostDTO, Post, UpdatePostDTO } from "./post.types"
-import { toast } from "react-toastify"
-import { isAxiosError } from "axios"
 
 export interface PostResponse {
   total: number

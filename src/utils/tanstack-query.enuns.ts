@@ -6,6 +6,7 @@ export enum KEYS {
   CREATE_PARTNER = "create-partner",
   CREATE_PRODUCT = "create-product",
   CREATE_SCHEDULE = "create-schedule",
+  CREATE_CLASSIFIED = "create-classified",
 
   GET_TIPS = "get-tips",
   UPDATE_TIP = "update-tip",
@@ -42,4 +43,9 @@ export enum KEYS {
   DELETE_SUB = "delete-sub",
   UPDATE_SUBS = "update-sub",
   GET_SINGLE_SUB = "get-single-sub",
+
+  GET_CLASSIFIEDS = "get-classifieds",
+  UPDATE_CLASSIFIED = "update-classified",
+  DELETE_CLASSIFIED = "delete-classified",
+  GET_SINGLE_CLASSIFIED = "get-single-classified",
 }

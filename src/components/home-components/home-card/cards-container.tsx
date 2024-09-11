@@ -1,15 +1,14 @@
-import CardStatus from "./card-status"
-import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
-import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
-import { useGetProducts } from "@/lib/tanstack-query/product/product-queries"
-
 import { Users } from "lucide-react"
+import CardStatus from "./card-status"
 import { ScrollText } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
 import LoadingData from "@/components/global/loading-data"
+import { useGetSubs } from "@/lib/tanstack-query/subs/subs-queries"
+import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
+import { useGetProducts } from "@/lib/tanstack-query/product/product-queries"
 
 const CardsContainer = () => {
-  const { isLoading: isLoadingUsers, data: users } = useGetUsers("", "1")
+  const { isLoading: isLoadingUsers, data: subs } = useGetSubs("")
   const { isLoading: isLoadingPosts, data: posts } = useGetAllPosts("", "", "1")
   const { isLoading: isLoadingProducts, data: products } = useGetProducts(
     "",
@@ -33,11 +32,11 @@ const CardsContainer = () => {
       />
       <CardStatus
         icon={Users}
-        data={users}
-        link="/usuários"
-        title="Usuários"
+        data={subs}
+        title="Inscritos"
+        link="/inscritos"
         color="bg-indigo-600"
-        className="h-full w-full lg:row-span-2 rounded-3xl p-4"
+        className="h-full w-full rounded-3xl p-4"
       />
 
       <CardStatus
@@ -48,6 +47,14 @@ const CardsContainer = () => {
         title="Artigos na loja"
         className="h-full w-full rounded-3xl p-4"
       />
+
+      <div className="flex flex-col items-center gap-8">
+        <h3>Ativar/Desativar envio de emails.</h3>
+
+        <button className={`relative border rounded-full w-24 h-8`}>
+          <input type="checkbox" className="size-6 " />
+        </button>
+      </div>
     </div>
   )
 }

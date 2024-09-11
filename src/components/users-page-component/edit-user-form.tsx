@@ -12,12 +12,14 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { UpdateUserDTO, User } from "@/api/users/user.type"
 import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
 import { useUpdateUser } from "@/lib/tanstack-query/users/user-mutations"
+// import { useAuth } from "@/context/auth-context"
 
 type Props = {
   user: User
 }
 
 const EditUserForm = ({ user }: Props) => {
+  // const { setUser, userId } = useAuth()
   const { mutateAsync } = useUpdateUser()
   const { isLoading, toggleLoading } = useIsLoading()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
