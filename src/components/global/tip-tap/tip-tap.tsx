@@ -6,12 +6,12 @@ import Image from "@tiptap/extension-image"
 import StarterKit from "@tiptap/starter-kit"
 import Youtube from "@tiptap/extension-youtube"
 import Underline from "@tiptap/extension-underline"
-import { Dispatch, SetStateAction, useEffect } from "react"
+import { useEffect } from "react"
 import { useEditor, EditorContent } from "@tiptap/react"
 
 type Props = {
   content?: string
-  setContent: Dispatch<SetStateAction<string>>
+  setContent: (newContent: string) => void
 }
 
 const TipTapEditor = ({ content, setContent }: Props) => {
