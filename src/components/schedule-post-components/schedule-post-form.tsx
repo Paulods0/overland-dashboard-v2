@@ -1,14 +1,15 @@
 import { Save } from "lucide-react"
 import { toast } from "react-toastify"
+import Loading from "../global/loading"
+import useIsLoading from "@/hooks/useIsLoading"
 import { uploadToFirebase } from "@/lib/firebase"
 import { Input } from "@/components/ui/input-field"
 import { ChangeEvent, FormEvent, useState } from "react"
 import FormButton from "@/components/ui/input-field/form-button"
 import { CreateScheduleDTO } from "@/api/schedule/schedule.types"
-import { AUTHOR_ID } from "../add-post-components/add-post-form"
 import { useCreateSchedule } from "@/lib/tanstack-query/schedule/schedule-mutations"
-import Loading from "../global/loading"
-import useIsLoading from "@/hooks/useIsLoading"
+import { useAuth } from "@/context/auth-context"
+import LoadingData from "../global/loading-data"
 
 type SchedulePostProps = {
   title: string
@@ -16,8 +17,11 @@ type SchedulePostProps = {
 }
 
 const SchedulePostForm = () => {
-  const { mutate } = useCreateSchedule()
+  const { userId } = useAuth()
+  const { mutateAsync } = useCreateSchedule()
   const { isLoading, toggleLoading } = useIsLoading()
+
+  if (!userId) return <LoadingData />
 
   const [schedule, setSchedule] = useState<SchedulePostProps>({
     title: "",
@@ -33,14 +37,14 @@ const SchedulePostForm = () => {
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     toggleLoading(true)
-    
+
     try {
       if (!schedule.title || !schedule.document) {
         toast.error("Preencha todos os dados")
         toggleLoading(false)
         return
       }
-      
+
       const fileDownloadURL = await uploadToFirebase(
         schedule.document,
         "schedule-posts"
@@ -49,17 +53,18 @@ const SchedulePostForm = () => {
       const data: CreateScheduleDTO = {
         ...schedule,
         file: fileDownloadURL,
-        author: AUTHOR_ID,
+        author: userId!,
       }
 
-      mutate(data)
+      const response = await mutateAsync(data)
+      toast.success(response.message)
       toggleLoading(false)
-      toast.success("O documento foi enviado com sucesso")
       console.log(data)
-      
+
       reseInputs()
-    } catch (error) {
+    } catch (error: any) {
       reseInputs()
+      toast.success(error)
       toggleLoading(false)
       console.log(error)
     }

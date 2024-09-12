@@ -56,11 +56,11 @@ const EditProductForm = ({ data }: Props) => {
         ...product,
         image: newImage,
       }
-      mutateAsync(updatedData)
-      toast.success("Artigo atualizado com sucesso")
-    } catch (error) {
+      const response = await mutateAsync(updatedData)
+      toast.success(response.message)
+    } catch (error: any) {
+      toast.error(error)
       console.log(error)
-      toast.error("Erro ao atualizar os dados")
     } finally {
       toggleLoading(false)
     }

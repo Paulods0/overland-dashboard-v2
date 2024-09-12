@@ -30,10 +30,10 @@ const StoreTable = ({ products }: Props) => {
     toggleLoading(true)
     try {
       await deleteFromFirebase(image, "products")
-      await mutateAsync(id)
-      toast.success("Removido com sucesso.")
-    } catch (error) {
-      toast.error("Erro ao remover. Tente novamente.")
+      const response = await mutateAsync(id)
+      toast.success(response.message)
+    } catch (error: any) {
+      toast.error(error)
       console.log(error)
     } finally {
       toggleLoading(false)

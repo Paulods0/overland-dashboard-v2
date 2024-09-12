@@ -20,10 +20,11 @@ const TipActionButtons = ({ tip }: Props) => {
     toggleLoading(true)
     try {
       await deleteFromFirebase(tip.image, "tips")
-      await mutateAsync(tip._id)
-    } catch (error) {
-      toast.error("Erro ao remover. Tente novamente.")
+      const response = await mutateAsync(tip._id)
+      toast.success(response.message)
+    } catch (error: any) {
       console.log(error)
+      toast.error(error)
     } finally {
       toggleLoading(false)
     }

@@ -15,7 +15,7 @@ type Props = {
 }
 
 const EditSchedulePostForm = ({ data }: Props) => {
-  const { mutate } = useUpdateSchedule()
+  const { mutateAsync } = useUpdateSchedule()
   const { isLoading, toggleLoading } = useIsLoading()
   const [pdfFilePreview, setPdfFilePreview] = useState<File | null>(null)
   const [schedule, setSchedule] = useState<UpdateScheduleDTO>({
@@ -35,17 +35,26 @@ const EditSchedulePostForm = ({ data }: Props) => {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     toggleLoading(true)
-    let currPdfDocument = schedule.file
-    if (pdfFilePreview) {
-      await deleteFromFirebase(schedule.file as string, "schedule-posts")
-      currPdfDocument = await uploadToFirebase(pdfFilePreview, "schedule-posts")
-    }
+    try {
+      let currPdfDocument = schedule.file
+      if (pdfFilePreview) {
+        await deleteFromFirebase(schedule.file as string, "schedule-posts")
+        currPdfDocument = await uploadToFirebase(
+          pdfFilePreview,
+          "schedule-posts"
+        )
+      }
 
-    const data: UpdateScheduleDTO = { ...schedule, file: currPdfDocument }
-    mutate(data)
-    toggleLoading(true)
-    toast.success("Os dados foram atualizados com sucesso")
-    console.log(data)
+      const data: UpdateScheduleDTO = { ...schedule, file: currPdfDocument }
+      const response = await mutateAsync(data)
+      toast.success(response.message)
+      toggleLoading(false)
+      console.log(data)
+    } catch (error: any) {
+      toast.error(error)
+      console.log(data)
+      toggleLoading(false)
+    }
   }
 
   return (

@@ -72,15 +72,14 @@ const EditTipForm = ({ tip, content }: Props) => {
         author_notes: updateTip.author_notes,
       }
 
-      await mutateAsync(data)
-
-      toast.success("Atualiado com sucesso")
-    } catch (error) {
-      console.log("Erro ao atualizar os dados", error)
+      const response = await mutateAsync(data)
+      toast.success(response.message)
+    } catch (error: any) {
       if (newImageURL !== tip?.image) {
         await deleteFromFirebase(newImageURL!, "tips")
       }
-      toast.error("Erro ao atualizar os dados. Por favor, tente novamente.")
+      toast.error(error)
+      console.log("Erro ao atualizar os dados", error)
     } finally {
       toggleLoading(false)
     }

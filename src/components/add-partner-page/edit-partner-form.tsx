@@ -71,18 +71,14 @@ const EditPartnerForm = ({ partner, content }: Props) => {
         author_notes: updatePartner.author_notes,
       }
 
-      await mutateAsync(data)
-
-      toast.success("Atualiado com sucesso.")
-      toggleLoading(false)
-    } catch (error) {
-      toast.success("Erro ao atualizar.Tente novamente.")
-      console.log("Erro ao atualizar.", error)
-
+      const response = await mutateAsync(data)
+      toast.success(response.message)
+    } catch (error: any) {
       if (newImageURL !== partner?.image) {
         await deleteFromFirebase(newImageURL!, "partners")
       }
-      toast.error("Erro ao atualizar. Tente novamente.")
+      toast.error(error)
+      console.log("Erro ao atualizar.", error)
     } finally {
       toggleLoading(false)
     }

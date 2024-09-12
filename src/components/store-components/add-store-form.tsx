@@ -36,7 +36,7 @@ export const productCategories = [
 ]
 
 const AddStoreForm = () => {
-  const { mutate } = useCreateProduct()
+  const { mutateAsync } = useCreateProduct()
   const { isLoading, toggleLoading } = useIsLoading()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
@@ -84,12 +84,12 @@ const AddStoreForm = () => {
       const imageURL = await uploadToFirebase(product.image as File, "products")
       const data: CreateProductDTO = { ...product, image: imageURL }
 
-      mutate(data)
-      toast.success("Artigo adicionado com sucesso")
+      const response = await mutateAsync(data)
+      toast.success(response.message)
       resetInputs()
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error)
       console.error("handleSubmit ~ error", error)
-      toast.error("Erro ao salvar o artigo, tente novamente")
     } finally {
       toggleLoading(false)
     }
