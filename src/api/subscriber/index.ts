@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios"
 import {
   CreateSubscriberDTO,
   Subscriber,
@@ -10,9 +11,21 @@ import axios from "@/config/axios.config"
 export class SubscriberAPI {
   static async createSubscriber(data: CreateSubscriberDTO): Promise<void> {
     try {
-      await axios.post("/newsletter/register", data)
+      const response = await axios.post("/newsletter/register", data)
+      return response.data
     } catch (error) {
-      console.log(error)
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
     }
   }
 
@@ -26,15 +39,45 @@ export class SubscriberAPI {
     return response.data
   }
 
-  static async updateSubscriber(data: UpdateSubscriberDTO): Promise<void> {
-    await axios.put(`/newsletter/${data.id}`, data)
+  static async updateSubscriber(
+    data: UpdateSubscriberDTO
+  ): Promise<{ message: string }> {
+    try {
+      const response = await axios.put(`/newsletter/${data.id}`, data)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 
   static async deleteSubscriber(id: string): Promise<void> {
     try {
-      await axios.delete(`/newsletter/${id}`)
+      const response = await axios.delete(`/newsletter/${id}`)
+      return response.data
     } catch (error) {
-      console.error(error)
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
     }
   }
 }

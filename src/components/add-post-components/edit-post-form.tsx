@@ -86,10 +86,10 @@ const EdittPostForm = ({ post, content }: Props) => {
         author_notes: updatePost.author_notes,
       }
 
-      await mutateAsync(data)
-      toast.success("Atualizado com sucesso.")
-    } catch (error) {
-      toast.error("Erro ao atualizar.")
+      const response = await mutateAsync(data)
+      toast.success(response.message)
+    } catch (error: any) {
+      toast.error(error)
       console.log(error)
     } finally {
       toggleLoading(false)

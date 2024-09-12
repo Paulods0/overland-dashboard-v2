@@ -19,11 +19,9 @@ type FormProps = {
   content: string
 }
 
-export const AUTHOR_ID = "66b50327c6794b27ee46c6f1"
-
 const AddPostForm = ({ content }: FormProps) => {
   const { userId, user } = useAuth()
-  const { mutate } = useCreatePost()
+  const { mutateAsync } = useCreatePost()
   const { data: users, isLoading: isLoadingUsers } = useGetUsers("", "100")
   const { isLoading, toggleLoading } = useIsLoading()
 
@@ -56,53 +54,56 @@ const AddPostForm = ({ content }: FormProps) => {
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     toggleLoading(true)
-
-    if (
-      !post.title ||
-      !post.mainImage ||
-      !post.category ||
-      !post.author_id ||
-      !post.date
-    ) {
-      toast.error("Por favor preencha todos os campos obrigatórios")
-      toggleLoading(false)
-      throw new Error("Form error, empty input")
-    }
-
-    if (post.category === "Passeios") {
-      if (!coordinates || !coordinates.includes(",")) {
-        toast.error(
-          "Por favor insira a latitude e a longitude separadas por vírgula."
-        )
+    try {
+      if (
+        !post.title ||
+        !post.mainImage ||
+        !post.category ||
+        !post.author_id ||
+        !post.date
+      ) {
+        toast.error("Por favor preencha todos os campos obrigatórios")
         toggleLoading(false)
-        return
+        throw new Error("Form error, empty input")
       }
-    }
 
-    const imageURL = await uploadToFirebase(post.mainImage as File, "posts")
-    const [lat, long] =
-      coordinates && coordinates.includes(",")
-        ? coordinates.split(",")
-        : [undefined, undefined]
+      if (post.category === "Passeios") {
+        if (!coordinates || !coordinates.includes(",")) {
+          toast.error(
+            "Por favor insira a latitude e a longitude separadas por vírgula."
+          )
+          toggleLoading(false)
+          return
+        }
+      }
 
-    const data: CreatePostDTO = {
-      latitude: lat,
-      longitude: long,
-      tag: post.tag,
-      date: post.date,
-      content: content,
-      title: post.title,
-      mainImage: imageURL,
-      category: post.category,
-      author_id: post.author_id,
-      highlighted: post.highlighted,
-      author_notes: post.author_notes,
+      const imageURL = await uploadToFirebase(post.mainImage as File, "posts")
+      const [lat, long] =
+        coordinates && coordinates.includes(",")
+          ? coordinates.split(",")
+          : [undefined, undefined]
+
+      const data: CreatePostDTO = {
+        latitude: lat,
+        longitude: long,
+        tag: post.tag,
+        date: post.date,
+        content: content,
+        title: post.title,
+        mainImage: imageURL,
+        category: post.category,
+        author_id: post.author_id,
+        highlighted: post.highlighted,
+        author_notes: post.author_notes,
+      }
+      console.log(data)
+      const response = await mutateAsync(data)
+      toggleLoading(false)
+      toast.success(response.message)
+      resetInputs()
+    } catch (error: any) {
+      toast.error(error.message)
     }
-    console.log(data)
-    mutate(data)
-    toggleLoading(false)
-    toast.success("Post adicinado com sucesso")
-    resetInputs()
   }
 
   function resetInputs() {
@@ -127,9 +128,9 @@ const AddPostForm = ({ content }: FormProps) => {
     <Box className="flex flex-col">
       <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col">
         <FormButton
+          label="Publicar"
           disabled={isLoading}
           icon={isLoading ? Loading : Save}
-          label="Publicar"
         />
         <Input.Root>
           <Input.Label title="Título*" />

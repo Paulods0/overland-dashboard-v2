@@ -5,17 +5,36 @@ import {
   ProductResponseDTO,
   UpdateProductDTO,
 } from "./product.types"
+import { isAxiosError } from "axios"
 
 export class ProductAPI {
-  static async createProduct(data: CreateProductDTO) {
+  static async createProduct(
+    data: CreateProductDTO
+  ): Promise<{ message: string }> {
     try {
-      await axios.post("/product", data)
+      const response = await axios.post("/product", data)
+      return response.data
     } catch (error) {
-      console.log(error)
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
     }
   }
 
-  static async getProducts(page: string, category:string,limit:string): Promise<ProductResponseDTO> {
+  static async getProducts(
+    page: string,
+    category: string,
+    limit: string
+  ): Promise<ProductResponseDTO> {
     const response = await axios.get(
       `/product?page=${page}&category=${category}&limit=${limit}`
     )
@@ -27,11 +46,45 @@ export class ProductAPI {
     return response.data
   }
 
-  static async updateProduct(data: UpdateProductDTO): Promise<void> {
-    await axios.put(`/product/${data.id}`, data)
+  static async updateProduct(
+    data: UpdateProductDTO
+  ): Promise<{ message: string }> {
+    try {
+      const response = await axios.put(`/product/${data.id}`, data)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 
-  static async deleteProduct(id: string): Promise<void> {
-    await axios.delete(`/product/${id}`)
+  static async deleteProduct(id: string): Promise<{ message: string }> {
+    try {
+      const response = await axios.delete(`/product/${id}`)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 }

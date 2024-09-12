@@ -32,11 +32,11 @@ const PostActionButtons = ({
   async function handleDeletePost() {
     try {
       await deleteFromFirebase(mainImage, "posts")
-      await mutateAsync(postId)
-      toast.success("Removido com sucesso.")
+      const response = await mutateAsync(postId)
+      toast.success(response.message)
     } catch (error: any) {
-      toast.error("Erro ao remover, tente novamente.")
       console.log(error)
+      toast.error(error)
     }
   }
 

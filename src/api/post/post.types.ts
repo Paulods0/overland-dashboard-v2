@@ -1,3 +1,9 @@
+export interface PostResponseDTO {
+  total: number
+  pages: number
+  posts: Post[]
+}
+
 export type Author = {
   _id: string
   email: string

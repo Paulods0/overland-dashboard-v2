@@ -5,13 +5,28 @@ import {
   ScheduleResponseDTO,
   UpdateScheduleDTO,
 } from "./schedule.types"
+import { isAxiosError } from "axios"
 
 export class SchedulePostAPI {
-  static async createSchedule(data: CreateScheduleDTO): Promise<void> {
+  static async createSchedule(
+    data: CreateScheduleDTO
+  ): Promise<{ message: string }> {
     try {
-      await axios.post("/schedule-post", data)
+      const response = await axios.post("/schedule-post", data)
+      return response.data
     } catch (error) {
-      console.log(error)
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
     }
   }
 
@@ -26,11 +41,45 @@ export class SchedulePostAPI {
     return response.data
   }
 
-  static async updateSchedule(data: UpdateScheduleDTO): Promise<void> {
-    await axios.put(`/schedule-post/${data.id}`, data)
+  static async updateSchedule(
+    data: UpdateScheduleDTO
+  ): Promise<{ message: string }> {
+    try {
+      const response = await axios.put(`/schedule-post/${data.id}`, data)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 
-  static async deleteSchedule(id: string): Promise<void> {
-    await axios.delete(`/schedule-post/${id}`)
+  static async deleteSchedule(id: string): Promise<{ message: string }> {
+    try {
+      const response = await axios.delete(`/schedule-post/${id}`)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 }

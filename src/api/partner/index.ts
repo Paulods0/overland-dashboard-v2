@@ -1,16 +1,31 @@
-import axios from "@/config/axios.config"
 import {
   CreatePartnerDTO,
   PartnerResponseDTO,
   UpdatePartnerDTO,
 } from "./partner.type"
+import { isAxiosError } from "axios"
+import axios from "@/config/axios.config"
 
 export class PartnerAPI {
-  static async createPartner(data: CreatePartnerDTO) {
+  static async createPartner(
+    data: CreatePartnerDTO
+  ): Promise<{ message: string }> {
     try {
-      await axios.post("/partner", data)
+      const response = await axios.post("/partner", data)
+      return response.data
     } catch (error) {
-      console.log(error)
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
     }
   }
   static async getPartners(page: string): Promise<PartnerResponseDTO> {
@@ -24,11 +39,45 @@ export class PartnerAPI {
     return response.data
   }
 
-  static async updatePartner(data: UpdatePartnerDTO) {
-    await axios.put(`/partner/${data._id}`, data)
+  static async updatePartner(
+    data: UpdatePartnerDTO
+  ): Promise<{ message: string }> {
+    try {
+      const response = await axios.put(`/partner/${data._id}`, data)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 
-  static async deletePartner(id: string) {
-    await axios.delete(`/partner/${id}`)
+  static async deletePartner(id: string): Promise<{ message: string }> {
+    try {
+      const response = await axios.delete(`/partner/${id}`)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 }

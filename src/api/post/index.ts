@@ -1,32 +1,31 @@
+import {
+  Post,
+  UpdatePostDTO,
+  CreatePostDTO,
+  PostResponseDTO,
+} from "./post.types"
 import { isAxiosError } from "axios"
-import { toast } from "react-toastify"
 import axios from "@/config/axios.config"
-import { CreatePostDTO, Post, UpdatePostDTO } from "./post.types"
-
-export interface PostResponse {
-  total: number
-  pages: number
-  posts: Post[]
-}
 
 export class PostAPI {
-  public static async createPost(post: CreatePostDTO): Promise<void> {
+  public static async createPost(
+    post: CreatePostDTO
+  ): Promise<{ message: string }> {
     try {
       const response = await axios.post("/post", post)
-      console.log(response.data.message)
-      return response.data.message
+      return response.data
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
           console.log("Erro no servidor:" + error.response.data.message)
-          toast.error(error.response.data.message)
+          throw new Error(error.response.data.message)
         } else {
           console.log("Erro na rede ou outro:" + error.message)
-          toast.error(error.message)
+          throw new Error(error.message)
         }
       } else {
-        console.log("Erro desconhecido:" + error)
-        toast.error("Ocorreu um erro. Tente mais tarde.")
+        console.log("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
       }
     }
   }
@@ -35,7 +34,7 @@ export class PostAPI {
     page?: string,
     limit?: string,
     category?: string
-  ): Promise<PostResponse> {
+  ): Promise<PostResponseDTO> {
     const response = await axios.get(
       `/post?page=${page}&category=${category}&limit=${limit}`
     )
@@ -53,11 +52,45 @@ export class PostAPI {
     return response.data
   }
 
-  public static async updatePost(data: UpdatePostDTO): Promise<void> {
-    await axios.put(`/post/${data.id}`, data)
+  public static async updatePost(
+    data: UpdatePostDTO
+  ): Promise<{ message: string }> {
+    try {
+      const reposnse = await axios.put(`/post/${data.id}`, data)
+      return reposnse.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro, tente mais tarde.")
+      }
+    }
   }
 
-  public static async deletePost(id: string): Promise<void> {
-    await axios.delete(`/post/${id}`)
+  public static async deletePost(id: string): Promise<{ message: string }> {
+    try {
+      const response = await axios.delete(`/post/${id}`)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          console.error("Erro no servidor: " + error.response.data.message)
+          throw new Error(error.response.data.message)
+        } else {
+          console.error("Erro na rede  ou outro: " + error.message)
+          throw new Error(error.message)
+        }
+      } else {
+        console.error("Erro desconhecido: " + error)
+        throw new Error("Ocorreu um erro. Tente mais tarde.")
+      }
+    }
   }
 }
