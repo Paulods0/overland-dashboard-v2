@@ -8,17 +8,18 @@ import { uploadToFirebase } from "@/lib/firebase"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { CreatePartnerDTO } from "@/api/partner/partner.type"
-import { AUTHOR_ID } from "../add-post-components/add-post-form"
 import { useGetUsers } from "@/lib/tanstack-query/users/user-queries"
 import { useCreatePartner } from "@/lib/tanstack-query/partner/partner-mutations"
+import { useAuth } from "@/context/auth-context"
 
 type PartnerProps = {
   content: string
 }
 
 const AddPartnerForm = ({ content }: PartnerProps) => {
-  const { mutate, isPending } = useCreatePartner()
+  const { userId } = useAuth()
   const { data: users } = useGetUsers("", "100")
+  const { mutate, isPending } = useCreatePartner()
 
   const [partner, setPartner] = useState<CreatePartnerDTO>({
     date: "",
@@ -26,8 +27,8 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
     title: "",
     image: "",
     content: "",
+    author: userId!,
     author_notes: "",
-    author: AUTHOR_ID,
   })
 
   const [previewImage, setPreviewImage] = useState<string | null>(null)

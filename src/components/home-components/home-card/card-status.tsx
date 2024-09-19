@@ -1,7 +1,7 @@
 import { ElementType } from "react"
 import { twMerge } from "tailwind-merge"
-import { PostResponse } from "@/api/post"
 import { Navigation } from "lucide-react"
+import { PostResponseDTO } from "@/api/post/post.types"
 import LinkButton from "@/components/ui/button/link-button"
 import { ProductResponseDTO } from "@/api/product/product.types"
 import { SubscriberResponseDTO } from "@/api/subscriber/subscriber.types"
@@ -12,7 +12,7 @@ type Props = {
   color: string
   icon: ElementType
   className?: string
-  data?: ProductResponseDTO | PostResponse | SubscriberResponseDTO
+  data?: ProductResponseDTO | PostResponseDTO | SubscriberResponseDTO
 }
 
 const CardStatus = ({ link, title, data, icon: Icon, className }: Props) => {
