@@ -28,7 +28,7 @@ const TipsPage = () => {
         />
       </div>
       {data && data?.posts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-3 h-[60vh] overflow-y-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:grid-cols-4 h-[60vh] overflow-y-auto">
           {data?.posts.map((tip, index) => (
             <TipCard key={index} tip={tip} />
           ))}

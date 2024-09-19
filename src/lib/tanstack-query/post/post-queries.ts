@@ -1,14 +1,14 @@
+import { PostAPI } from "@/api/post"
 import { useQuery } from "@tanstack/react-query"
-import { PostAPI, PostResponse } from "@/api/post"
 import { KEYS } from "@/utils/tanstack-query.enuns"
-import { Post } from "@/api/post/post.types"
+import { Post, PostResponseDTO } from "@/api/post/post.types"
 
 export const useGetAllPosts = (
   page?: string,
   limit?: string,
   category?: string
 ) => {
-  return useQuery<PostResponse>({
+  return useQuery<PostResponseDTO>({
     queryKey: [KEYS.GET_POSTS, page, category],
     queryFn: () => PostAPI.getAllPosts(page, limit, category),
   })

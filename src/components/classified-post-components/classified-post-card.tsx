@@ -2,6 +2,7 @@ import Box from "../global/box"
 import Modal from "../global/modal"
 import Button from "../ui/button/button"
 import { Edit2, Eye } from "lucide-react"
+import ClassifiedCarousel from "./classified-carousel"
 import EditClassifiedForm from "./edit-classified-form"
 import { Classified } from "@/api/classified/classified.types"
 import RemoveClassifiedDialog from "./remove-classified-dialog"
@@ -40,18 +41,20 @@ const ClassifiedPostCard = ({ post }: Props) => {
       <div className="flex flex-col gap-2">
         <h1 className="font-bold text-lg line-clamp-1">{post.title}</h1>
 
-        <ul className="w-full space-y-2">
-          <li className="text-xs">Preço: {price}</li>
-          <li className="text-xs">
-            Tipo: {post.type === "sell" ? "à venda" : "quer comprar"}
-          </li>
-          <li className="text-xs">
+        <div className="flex items-start w-full">
+          <ul className="w-full space-y-2">
+            <li className="text-xs">Preço: {price}</li>
+            <li className="text-xs">
+              Tipo: {post.type === "sell" ? "à venda" : "quer comprar"}
+            </li>
+          </ul>
+          <p className="text-xs flex space-x-2">
             Estado: <span className={`px-1 ${statusColor}`}>{status}</span>
-          </li>
-        </ul>
+          </p>
+        </div>
 
         <div className="text-xs flex flex-col  border-y py-2">
-          <h2 className="font-bold uppercase mb-2">Dados do autor</h2>
+          <h2 className="font-bold uppercase mb-2">Dados do anunciante</h2>
           <ul className="w-full space-y-2">
             <li>
               Nome:
@@ -80,11 +83,19 @@ const ClassifiedPostCard = ({ post }: Props) => {
           </Modal>
 
           <div className="flex items-center  gap-2">
-            <Button
-              icon={Eye}
-              buttonType="transparent"
-              className="rounded-full"
-            />
+            <Modal
+              trigger={
+                <Button
+                  icon={Eye}
+                  buttonType="transparent"
+                  className="rounded-full"
+                />
+              }
+              title="Outras imagens"
+            >
+              <ClassifiedCarousel post={post} />
+            </Modal>
+
             <RemoveClassifiedDialog post={post} />
           </div>
         </div>

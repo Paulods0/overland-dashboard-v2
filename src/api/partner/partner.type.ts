@@ -7,6 +7,7 @@ export type Partner = {
   title: string
   author: Author
   content: string
+  createdAt:string
   author_notes?: string
 }
 

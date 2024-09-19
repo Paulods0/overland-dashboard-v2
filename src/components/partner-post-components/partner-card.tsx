@@ -1,9 +1,6 @@
 import Box from "@/components/global/box"
-import { Edit3, Trash } from "lucide-react"
-import LinkButton from "../ui/button/link-button"
-import Button from "@/components/ui/button/button"
 import { Partner } from "@/api/partner/partner.type"
-import AlertModal from "@/components/global/alert-modal"
+import PartnerActionButtons from "./partner-action-buttons"
 
 type Props = {
   partner: Partner
@@ -11,33 +8,20 @@ type Props = {
 
 const PartnerCard = ({ partner }: Props) => {
   return (
-    <Box className="flex flex-col gap-4 h-fit divide-y">
+    <Box className="flex flex-col p-4 gap-4 h-[250px] justify-between">
       <img
         src={partner.image}
-        className="object-contain w-full h-[25vh]"
+        className="object-contain w-full h-[15vh]"
         alt={partner.title}
       />
-      <div className="flex w-full items-end justify-between py-3">
-        <div className="flex flex-col w-full">
+
+      <div className="flex flex-col w-full items-end justify-between gap-3">
+        <div className="flex w-full flex-col gap-2">
           <h1>{partner.title}</h1>
-          <h4 className="text-xs italic font-bold mt-2">#Parceiros</h4>
+          <h4 className="text-xs italic font-bold">#Parceiros</h4>
         </div>
 
-        <div className="flex flex-col items-end w-full">
-          <h4 className="italic text-xs">{partner.date}</h4>
-          <div className="flex items-center gap-2">
-            <LinkButton
-              icon={Edit3}
-              href={`/parceiro/${partner._id}`}
-              className="bg-white text-black"
-            />
-            <AlertModal
-              trigger={<Button icon={Trash} buttonType="danger" />}
-              actionBtn={<Button buttonType="danger" label="Remover" />}
-              title="Tem a certeza que pretendes remover esta dica?"
-            />
-          </div>
-        </div>
+        <PartnerActionButtons partner={partner} />
       </div>
     </Box>
   )

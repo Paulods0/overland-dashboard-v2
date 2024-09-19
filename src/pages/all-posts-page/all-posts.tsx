@@ -37,9 +37,9 @@ const AllPosts = () => {
       </div>
 
       {data && data?.posts.length > 0 ? (
-        <div className="h-[50dvh] md:h-[80vh] py-2 grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 place-items-center w-full">
-          {data?.posts?.map((post) => (
-            <PostCard key={post._id} post={post} />
+        <div className="h-[50dvh] md:h-[80vh] py-2 grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 gap-4 lg:grid-cols-4 w-full">
+          {data?.posts.map((post) => (
+            <PostCard post={post} key={post._id} />
           ))}
         </div>
       ) : (

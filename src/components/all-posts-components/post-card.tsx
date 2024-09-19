@@ -11,7 +11,7 @@ const PostCard = ({ post }: Props) => {
   const formatedDate = formatDate(post.date)
 
   return (
-    <Box className="relative border rounded-lg p-4 w-full flex flex-col gap-2">
+    <Box className="relative border rounded-lg h-[250px] p-4 w-full flex flex-col gap-2">
       <img
         src={post.mainImage}
         alt="image do post"

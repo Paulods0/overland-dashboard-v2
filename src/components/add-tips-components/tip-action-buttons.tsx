@@ -39,7 +39,9 @@ const TipActionButtons = ({ tip }: Props) => {
       />
 
       <AlertModal
-        trigger={<Button icon={Trash} buttonType="danger" />}
+        trigger={
+          <Button className="rounded-full" icon={Trash} buttonType="danger" />
+        }
         title="Tem a certeza que pretendes remover esta dica?"
         actionBtn={
           <Button
