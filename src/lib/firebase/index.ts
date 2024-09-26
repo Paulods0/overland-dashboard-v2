@@ -1,7 +1,7 @@
 import {
+  ref,
   deleteObject,
   getDownloadURL,
-  ref,
   uploadBytesResumable,
 } from "firebase/storage"
 import { renameImageName } from "../utils"
@@ -53,8 +53,7 @@ export async function deleteFromFirebase(
     if (error.code === "storage/object-not-found") {
       console.error("Imagem não encontrada no Firebase, continuando a remoção.")
     } else {
-      "Error ao remover a imagem no firebase", error
-      throw error
+      throw new error("Error ao remover a imagem no firebase")
     }
   }
 }
@@ -87,7 +86,6 @@ export async function uploadToFirebase(
     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
     return downloadURL
   } catch (error) {
-    "Error ao fazer upload da imagem", error
-    throw error
+    console.log(error)
   }
 }
