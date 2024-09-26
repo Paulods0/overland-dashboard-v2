@@ -32,7 +32,6 @@ export class SchedulePostAPI {
 
   static async getSchedules(page: string): Promise<ScheduleResponseDTO> {
     const response = await axios.get(`/schedule-post?page=${page}`)
-    console.log(response.data)
     return response.data
   }
 

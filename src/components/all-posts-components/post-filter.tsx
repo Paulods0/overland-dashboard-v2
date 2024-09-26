@@ -17,7 +17,7 @@ const PostFilter = ({ handleCategory }: Props) => {
 
   return (
     <div className="lg:w-fit w-full h-auto">
-      <Select.Container defaultValue={""} onChange={handleChange}>
+      <Select.Container onChange={handleChange}>
         <Select.Option value={""} label={"Todos"} />
         {categories.map((category, index) => (
           <Select.Option

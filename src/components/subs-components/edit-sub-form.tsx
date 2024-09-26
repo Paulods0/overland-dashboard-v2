@@ -33,7 +33,6 @@ const EditSubForm = ({ subscriber }: Props) => {
     try {
       const data: UpdateSubscriberDTO = { ...sub }
       toast.success("Dados atualizados com sucesso")
-      console.log(data)
       await mutateAsync(data)
     } catch (error) {
       toast.error("Erro ao atualizar os dados, tente novamente")

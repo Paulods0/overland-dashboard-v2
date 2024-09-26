@@ -1,0 +1,32 @@
+.switch-button {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  background: #af0000;
+  transition: 0.2s;
+}
+
+.switch-button::before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: 4px;
+  border-radius: 50px;
+  background-color: #fff;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.switch-input:checked + label {
+  background-color: #00d157;
+}
+.switch-input:checked + label::before {
+  transform: translateX(125%);
+}
+.switch-input {
+  display: none;
+}

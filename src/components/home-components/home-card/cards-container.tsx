@@ -3,6 +3,7 @@ import CardStatus from "./card-status"
 import { ScrollText } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
 import LoadingData from "@/components/global/loading-data"
+import SendEmailSwitchButton from "./send-email-switch-button"
 import { useGetSubs } from "@/lib/tanstack-query/subs/subs-queries"
 import { useGetAllPosts } from "@/lib/tanstack-query/post/post-queries"
 import { useGetProducts } from "@/lib/tanstack-query/product/product-queries"
@@ -48,12 +49,10 @@ const CardsContainer = () => {
         className="h-full w-full rounded-3xl p-4"
       />
 
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex bg-blackAndLight flex-col items-center gap-2 border rounded-3xl p-2">
         <h3>Ativar/Desativar envio de emails.</h3>
 
-        <button className={`relative border rounded-full w-24 h-8`}>
-          <input type="checkbox" className="size-6 " />
-        </button>
+        <SendEmailSwitchButton />
       </div>
     </div>
   )

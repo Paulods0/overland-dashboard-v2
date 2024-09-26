@@ -72,12 +72,10 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
         author: partner.author,
         author_notes: partner.author_notes,
       }
-
-      console.log(data)
       mutate(data)
       toast.success("Publicado com sucesso")
     } catch (error) {
-      console.log(error)
+      error
     }
   }
 

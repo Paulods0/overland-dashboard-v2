@@ -48,11 +48,9 @@ const EditSchedulePostForm = ({ data }: Props) => {
       const data: UpdateScheduleDTO = { ...schedule, file: currPdfDocument }
       const response = await mutateAsync(data)
       toast.success(response.message)
-      toggleLoading(false)
-      console.log(data)
     } catch (error: any) {
       toast.error(error)
-      console.log(data)
+    } finally {
       toggleLoading(false)
     }
   }

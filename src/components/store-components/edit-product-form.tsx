@@ -7,11 +7,11 @@ import { DialogClose } from "../ui/dialog"
 import { Select } from "../ui/select-field"
 import useIsLoading from "@/hooks/useIsLoading"
 import { deleteFromFirebase } from "@/lib/firebase"
-import { productCategories } from "./add-store-form"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { Product, UpdateProductDTO } from "@/api/product/product.types"
 import { useUpdateProduct } from "@/lib/tanstack-query/product/product-mutation"
+import { productCategories } from "@/utils/utils"
 
 type Props = {
   data: Product
@@ -60,7 +60,6 @@ const EditProductForm = ({ data }: Props) => {
       toast.success(response.message)
     } catch (error: any) {
       toast.error(error)
-      console.log(error)
     } finally {
       toggleLoading(false)
     }

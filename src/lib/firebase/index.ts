@@ -53,7 +53,7 @@ export async function deleteFromFirebase(
     if (error.code === "storage/object-not-found") {
       console.error("Imagem não encontrada no Firebase, continuando a remoção.")
     } else {
-      console.log("Error ao remover a imagem no firebase", error)
+      "Error ao remover a imagem no firebase", error
       throw error
     }
   }
@@ -87,7 +87,7 @@ export async function uploadToFirebase(
     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
     return downloadURL
   } catch (error) {
-    console.log("Error ao fazer upload da imagem", error)
+    "Error ao fazer upload da imagem", error
     throw error
   }
 }

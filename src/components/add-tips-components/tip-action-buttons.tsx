@@ -23,7 +23,7 @@ const TipActionButtons = ({ tip }: Props) => {
       const response = await mutateAsync(tip._id)
       toast.success(response.message)
     } catch (error: any) {
-      console.log(error)
+      error
       toast.error(error)
     } finally {
       toggleLoading(false)

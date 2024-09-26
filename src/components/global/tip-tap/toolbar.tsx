@@ -12,10 +12,12 @@ import {
   Heading2,
   Underline,
   ListOrdered,
+  Link,
 } from "lucide-react"
 //@ts-ignore
 import ToolbarButton from "./toolbar-button"
 import { uploadToFirebase } from "@/lib/firebase"
+import { useCallback } from "react"
 
 type Props = {
   editor: Editor | null
@@ -34,7 +36,7 @@ const Toolbar = ({ editor }: Props) => {
       const file = target.files?.[0]
 
       if (file) {
-        const downloadURL = await uploadToFirebase(file, "posts-content")        
+        const downloadURL = await uploadToFirebase(file, "posts-content")
         editor!.chain().focus().setImage({ src: downloadURL }).run()
       }
     }
@@ -46,6 +48,24 @@ const Toolbar = ({ editor }: Props) => {
       editor.commands.setYoutubeVideo({ src: url })
     }
   }
+  const setLink = useCallback(() => {
+    const previousUrl = editor.getAttributes("link").href
+    const url = window.prompt("URL", previousUrl)
+
+    // cancelled
+    if (url === null) {
+      return
+    }
+
+    // empty
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run()
+      return
+    }
+
+    // update link
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
+  }, [editor])
 
   return (
     <div className="px-4 py-2 rounded-lg w-full border">
@@ -150,6 +170,12 @@ const Toolbar = ({ editor }: Props) => {
           icon={Youtube}
           isActive={editor.isActive("youtube")}
           onClick={addYouTubeVideo}
+        />
+
+        <ToolbarButton
+          icon={Link}
+          isActive={editor.isActive("link")}
+          onClick={setLink}
         />
       </div>
     </div>

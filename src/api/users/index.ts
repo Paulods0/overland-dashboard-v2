@@ -38,7 +38,6 @@ export class UserAPI {
         limit,
       },
     })
-    console.log(response)
     return response.data
   }
 

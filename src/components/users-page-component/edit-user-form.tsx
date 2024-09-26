@@ -1,8 +1,8 @@
 import { Save } from "lucide-react"
-import { roles } from "./user-form"
 import { toast } from "react-toastify"
 import Loading from "../global/loading"
 import Button from "../ui/button/button"
+import { roles } from "../../utils/utils"
 import { DialogClose } from "../ui/dialog"
 import useIsLoading from "@/hooks/useIsLoading"
 import { Input } from "@/components/ui/input-field"
@@ -12,7 +12,6 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { UpdateUserDTO, User } from "@/api/users/user.type"
 import { deleteFromFirebase, uploadToFirebase } from "@/lib/firebase"
 import { useUpdateUser } from "@/lib/tanstack-query/users/user-mutations"
-// import { useAuth } from "@/context/auth-context"
 
 type Props = {
   user: User
@@ -58,7 +57,6 @@ const EditUserForm = ({ user }: Props) => {
       toast.success("Atualizado com sucesso.")
     } catch (error) {
       toast.error("Erro ao atualizar.")
-      console.log(error)
     } finally {
       toggleLoading(false)
     }

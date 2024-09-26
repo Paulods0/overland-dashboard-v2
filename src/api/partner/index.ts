@@ -30,7 +30,6 @@ export class PartnerAPI {
   }
   static async getPartners(page: string): Promise<PartnerResponseDTO> {
     const response = await axios.get(`/partner?page=${page}`)
-    console.log(response.data)
     return response.data
   }
 

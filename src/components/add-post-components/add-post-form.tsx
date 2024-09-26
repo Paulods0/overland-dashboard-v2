@@ -96,7 +96,6 @@ const AddPostForm = ({ content }: FormProps) => {
         highlighted: post.highlighted,
         author_notes: post.author_notes,
       }
-      console.log(data)
       const response = await mutateAsync(data)
       toggleLoading(false)
       toast.success(response.message)

@@ -6,34 +6,12 @@ import { DialogClose } from "../ui/dialog"
 import { Select } from "../ui/select-field"
 import useIsLoading from "@/hooks/useIsLoading"
 import { uploadToFirebase } from "@/lib/firebase"
+import { productCategories } from "@/utils/utils"
 import { Input } from "@/components/ui/input-field"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { CreateProductDTO } from "@/api/product/product.types"
 import { useCreateProduct } from "@/lib/tanstack-query/product/product-mutation"
-
-export const productCategories = [
-  {
-    name: "Camping Gear",
-    value: "camping-gear",
-  },
-  {
-    name: "Car Gear",
-    value: "car-gear",
-  },
-  {
-    name: "Vestuário",
-    value: "vestuário",
-  },
-  {
-    name: "Merchandising",
-    value: "merchandising",
-  },
-  {
-    name: "Cursos",
-    value: "cursos",
-  },
-]
 
 const AddStoreForm = () => {
   const { mutateAsync } = useCreateProduct()

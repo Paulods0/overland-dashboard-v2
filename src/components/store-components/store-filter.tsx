@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react"
 import { Input } from "../ui/input-field"
-import { productCategories } from "./add-store-form"
 import { Select } from "@/components/ui/select-field"
+import { productCategories } from "../../utils/utils"
 import { SetURLSearchParams } from "react-router-dom"
 
 type Props = {

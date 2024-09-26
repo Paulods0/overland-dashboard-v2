@@ -78,7 +78,6 @@ const EditPartnerForm = ({ partner, content }: Props) => {
         await deleteFromFirebase(newImageURL!, "partners")
       }
       toast.error(error)
-      console.log("Erro ao atualizar.", error)
     } finally {
       toggleLoading(false)
     }

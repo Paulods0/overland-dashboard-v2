@@ -33,7 +33,6 @@ export const SubsForm = () => {
       }
 
       const data: CreateSubscriberDTO = { ...subscriber }
-      console.log(data)
       mutate(data)
       toast.success("Subscrição feita com sucesso.")
       toggleLoading(false)

@@ -69,14 +69,14 @@ const AddTipsForm = ({ content }: TipsProps) => {
       }
 
       mutate(data, {
-        onSuccess: () => console.log(data),
+        onSuccess: () => data,
         onError: (error) => console.error(error),
       })
 
       toggleLoading(false)
       toast.success("Dica adicionada com sucesso")
     } catch (error) {
-      console.log(error)
+      error
       toast.error("Erro ao publicar")
       toggleLoading(false)
     }

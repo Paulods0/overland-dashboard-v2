@@ -1,11 +1,11 @@
-import axios from "@/config/axios.config"
 import {
-  CreateProductDTO,
   Product,
-  ProductResponseDTO,
   UpdateProductDTO,
+  CreateProductDTO,
+  ProductResponseDTO,
 } from "./product.types"
 import { isAxiosError } from "axios"
+import axios from "@/config/axios.config"
 
 export class ProductAPI {
   static async createProduct(
@@ -17,14 +17,11 @@ export class ProductAPI {
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
-          console.error("Erro no servidor: " + error.response.data.message)
           throw new Error(error.response.data.message)
         } else {
-          console.error("Erro na rede ou outro: " + error.message)
           throw new Error(error.message)
         }
       } else {
-        console.error("Erro desconhecido: " + error)
         throw new Error("Ocorreu um erro. Tente mais tarde.")
       }
     }
@@ -55,14 +52,11 @@ export class ProductAPI {
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
-          console.error("Erro no servidor: " + error.response.data.message)
           throw new Error(error.response.data.message)
         } else {
-          console.error("Erro na rede ou outro: " + error.message)
           throw new Error(error.message)
         }
       } else {
-        console.error("Erro desconhecido: " + error)
         throw new Error("Ocorreu um erro. Tente mais tarde.")
       }
     }
@@ -75,14 +69,11 @@ export class ProductAPI {
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
-          console.error("Erro no servidor: " + error.response.data.message)
           throw new Error(error.response.data.message)
         } else {
-          console.error("Erro na rede ou outro: " + error.message)
           throw new Error(error.message)
         }
       } else {
-        console.error("Erro desconhecido: " + error)
         throw new Error("Ocorreu um erro. Tente mais tarde.")
       }
     }

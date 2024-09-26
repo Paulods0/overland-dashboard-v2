@@ -10,20 +10,23 @@ import {
   AlertDialogDescription,
 } from "../ui/alert-dialog"
 import { Trash2 } from "lucide-react"
+import { toast } from "react-toastify"
 import Button from "../ui/button/button"
+import useIsLoading from "@/hooks/useIsLoading"
 import { deleteFromFirebase } from "@/lib/firebase"
 import { Classified } from "@/api/classified/classified.types"
 import { useDeleteClassified } from "@/lib/tanstack-query/classified/classified-mutations"
-import { toast } from "react-toastify"
 
 type Props = {
   post: Classified
 }
 
 const RemoveClassifiedDialog = ({ post }: Props) => {
-  const { mutateAsync, isPending } = useDeleteClassified()
+  const { isLoading, toggleLoading } = useIsLoading()
+  const { mutateAsync } = useDeleteClassified()
 
   async function handleDeleteClassifiedPost() {
+    toggleLoading(true)
     try {
       await deleteFromFirebase(post.mainImage, "classified-posts")
       if (post.images) {
@@ -35,7 +38,8 @@ const RemoveClassifiedDialog = ({ post }: Props) => {
       toast.success(response.message)
     } catch (error: any) {
       toast.error(error)
-      console.log(error)
+    } finally {
+      toggleLoading(false)
     }
   }
   return (
@@ -57,10 +61,10 @@ const RemoveClassifiedDialog = ({ post }: Props) => {
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
-              label="Eliminar"
               buttonType="danger"
-              disabled={isPending}
+              disabled={isLoading}
               onClick={handleDeleteClassifiedPost}
+              label={isLoading ? "Eliminando..." : "Eliminar"}
             />
           </AlertDialogAction>
         </AlertDialogFooter>

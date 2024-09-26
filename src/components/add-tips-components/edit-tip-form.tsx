@@ -79,7 +79,6 @@ const EditTipForm = ({ tip, content }: Props) => {
         await deleteFromFirebase(newImageURL!, "tips")
       }
       toast.error(error)
-      console.log("Erro ao atualizar os dados", error)
     } finally {
       toggleLoading(false)
     }

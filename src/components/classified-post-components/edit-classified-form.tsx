@@ -27,7 +27,6 @@ const EditClassifiedForm = ({ post }: Props) => {
       toast.success(response.message)
     } catch (error: any) {
       toast.error(error)
-      console.log(error)
     }
   }
 

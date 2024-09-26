@@ -35,7 +35,7 @@ const PostActionButtons = ({
       const response = await mutateAsync(postId)
       toast.success(response.message)
     } catch (error: any) {
-      console.log(error)
+      error
       toast.error(error)
     }
   }

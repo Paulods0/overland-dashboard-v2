@@ -58,15 +58,13 @@ const SchedulePostForm = () => {
 
       const response = await mutateAsync(data)
       toast.success(response.message)
-      toggleLoading(false)
-      console.log(data)
 
       reseInputs()
     } catch (error: any) {
       reseInputs()
       toast.success(error)
+    } finally {
       toggleLoading(false)
-      console.log(error)
     }
   }
 

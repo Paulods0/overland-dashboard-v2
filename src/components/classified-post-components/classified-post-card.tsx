@@ -91,7 +91,7 @@ const ClassifiedPostCard = ({ post }: Props) => {
                   className="rounded-full"
                 />
               }
-              title="Outras imagens"
+              title="Mais imagens"
             >
               <ClassifiedCarousel post={post} />
             </Modal>

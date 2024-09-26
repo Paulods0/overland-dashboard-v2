@@ -10,21 +10,7 @@ import { CreateUserDTO } from "@/api/users/user.type"
 import FormButton from "../ui/input-field/form-button"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { useCreateUser } from "@/lib/tanstack-query/users/user-mutations"
-
-export const roles = [
-  {
-    role: "admin",
-    label: "Admin",
-  },
-  {
-    role: "store-manager",
-    label: "Gestor de loja",
-  },
-  {
-    role: "publicator",
-    label: "Publicador",
-  },
-]
+import { roles } from "@/utils/utils"
 
 const UserForm = () => {
   const { mutateAsync, isPending } = useCreateUser()

@@ -2,6 +2,7 @@ import "./tip-tap.style.css"
 
 import ToolBar from "./toolbar"
 import Iframe from "./extensions"
+import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import StarterKit from "@tiptap/starter-kit"
 import Youtube from "@tiptap/extension-youtube"
@@ -37,6 +38,11 @@ const TipTapEditor = ({ content, setContent }: Props) => {
         allowFullscreen: true,
       }),
       Underline,
+      Link.configure({
+        autolink: true,
+        openOnClick: true,
+        defaultProtocol: "https",
+      }),
     ],
     editorProps: {
       attributes: {
