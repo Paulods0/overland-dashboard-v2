@@ -90,7 +90,7 @@ const AddPostForm = ({ content }: FormProps) => {
         date: post.date,
         content: content,
         title: post.title,
-        mainImage: imageURL,
+        mainImage: imageURL!,
         category: post.category,
         author_id: post.author_id,
         highlighted: post.highlighted,

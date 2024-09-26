@@ -37,7 +37,7 @@ const Toolbar = ({ editor }: Props) => {
 
       if (file) {
         const downloadURL = await uploadToFirebase(file, "posts-content")
-        editor!.chain().focus().setImage({ src: downloadURL }).run()
+        editor!.chain().focus().setImage({ src: downloadURL! }).run()
       }
     }
     input.click()

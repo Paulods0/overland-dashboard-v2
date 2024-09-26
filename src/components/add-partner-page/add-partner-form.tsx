@@ -66,7 +66,7 @@ const AddPartnerForm = ({ content }: PartnerProps) => {
       const data: CreatePartnerDTO = {
         content,
         tags: tagArr,
-        image: downloadURL,
+        image: downloadURL!,
         date: partner.date,
         title: partner.title,
         author: partner.author,

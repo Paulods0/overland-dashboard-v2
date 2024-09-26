@@ -60,7 +60,7 @@ const AddStoreForm = () => {
         return
       }
       const imageURL = await uploadToFirebase(product.image as File, "products")
-      const data: CreateProductDTO = { ...product, image: imageURL }
+      const data: CreateProductDTO = { ...product, image: imageURL as string }
 
       const response = await mutateAsync(data)
       toast.success(response.message)

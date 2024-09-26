@@ -63,7 +63,7 @@ const AddTipsForm = ({ content }: TipsProps) => {
         tags: tip.tags,
         category: TIP_CATEGORY,
         title: tip.title,
-        image: downlodURL,
+        image: downlodURL!,
         author: tip.author,
         author_notes: tip.author_notes,
       }

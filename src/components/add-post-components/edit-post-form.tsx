@@ -68,7 +68,7 @@ const EdittPostForm = ({ post, content }: Props) => {
 
       if (previewImg && updatePost?.mainImage instanceof File) {
         await deleteFromFirebase(post!.mainImage, "posts")
-        currentPostImg = await uploadToFirebase(updatePost.mainImage, "posts")
+        currentPostImg = await uploadToFirebase(updatePost.mainImage!, "posts") as string
       }
 
       const data: UpdatePostDTO = {

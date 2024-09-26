@@ -52,7 +52,7 @@ const SchedulePostForm = () => {
 
       const data: CreateScheduleDTO = {
         ...schedule,
-        file: fileDownloadURL,
+        file: fileDownloadURL!,
         author: userId!,
       }
 
