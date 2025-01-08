@@ -8,6 +8,7 @@ export enum KEYS {
   CREATE_PRODUCT = "create-product",
   CREATE_SCHEDULE = "create-schedule",
   CREATE_CLASSIFIED = "create-classified",
+  CREATE_PARTNER_IMAGE = "create-partner-image",
 
   /** TIP */
   GET_TIPS = "get-tips",
@@ -57,6 +58,11 @@ export enum KEYS {
   UPDATE_CLASSIFIED = "update-classified",
   DELETE_CLASSIFIED = "delete-classified",
   GET_SINGLE_CLASSIFIED = "get-single-classified",
+
+  /** PARTNER IMAGE */
+  GET_PARTNER_IMAGE = "get-partner-image",
+  UPDATE_PARTNER_IMAGE = "update-partner-image",
+  DELETE_PARTNER_IMAGE = "delete-partner-image",
 
   /** CAN SEND EMAIL */
   GET_EMAIL_STATUS = "get-email-status",

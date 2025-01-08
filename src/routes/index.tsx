@@ -84,6 +84,10 @@ export const router = createBrowserRouter([
         path: "parceiro/:id",
         element: <Page.EditPartnerPage />,
       },
+      {
+        path: "imagem-dos-parceiros",
+        element: <Page.SponsorsImagesPage />,
+      },
     ],
   },
 ])

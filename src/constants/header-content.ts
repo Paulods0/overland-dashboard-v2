@@ -1,4 +1,14 @@
-import { Home,Plus, Users,Store,Files,UserRoundCheck,Lightbulb,Handshake } from "lucide-react"
+import {
+  Home,
+  Plus,
+  Users,
+  Store,
+  Files,
+  UserRoundCheck,
+  Lightbulb,
+  Handshake,
+  GalleryThumbnails,
+} from "lucide-react"
 
 export const HEADER_LINKS = [
   {
@@ -40,5 +50,10 @@ export const HEADER_LINKS = [
     label: "Parceiros",
     link: "/parceiros",
     icon: Handshake,
+  },
+  {
+    label: "Img. Parceiros",
+    link: "/imagem-dos-parceiros",
+    icon: GalleryThumbnails,
   },
 ]

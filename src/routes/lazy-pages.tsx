@@ -14,16 +14,11 @@ const AllPosts = lazy(() => import("../pages/all-posts-page/all-posts"))
 const SchedulePostsPage = lazy(() => import("../pages/schedule-post-page"))
 const AddPostPage = lazy(() => import("../pages/add-post-page/add-post-page"))
 const AddTipsPage = lazy(() => import("../pages/add-post-page/add-tips-page"))
+const SponsorsImagesPage = lazy(() => import("../pages/sponsors-images-page"))
 const ClassifiedPostsPage = lazy(() => import("../pages/classified-posts-page"))
-const SelectPostType = lazy(
-  () => import("../pages/add-post-page/select-post-type")
-)
-const AddPartnersPage = lazy(
-  () => import("../pages/add-post-page/add-partners-page")
-)
-const AddSchedulePage = lazy(
-  () => import("../pages/add-post-page/add-schedule-page")
-)
+const SelectPostType = lazy(() => import("../pages/add-post-page/select-post-type"))
+const AddPartnersPage = lazy(() => import("../pages/add-post-page/add-partners-page"))
+const AddSchedulePage = lazy(() => import("../pages/add-post-page/add-schedule-page"))
 
 export const Page = {
   AllPosts,
@@ -43,5 +38,6 @@ export const Page = {
   AddPartnersPage,
   EditPartnerPage,
   SchedulePostsPage,
+  SponsorsImagesPage,
   ClassifiedPostsPage,
 }

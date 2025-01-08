@@ -9,6 +9,7 @@ import { storage } from "../../config/firebase.config"
 
 export type FirebaseFolder =
   | "posts"
+  | "partners-image"
   | "classified-posts"
   | "products"
   | "profile"
